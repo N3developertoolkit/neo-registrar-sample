@@ -43,6 +43,31 @@ namespace NeoTestHarness
             }
         }
 
+        static long initMagic = -1;
+        public static void InitializeProtocolSettings(long magic)
+        {
+            if (initMagic < 0)
+            {
+                var settings = new[] { KeyValuePair.Create("ProtocolConfiguration:Magic", $"{magic}") };
+                var protocolConfig = new ConfigurationBuilder()
+                    .AddInMemoryCollection(settings)
+                    .Build();
+
+                if (!ProtocolSettings.Initialize(protocolConfig))
+                {
+                    throw new Exception("could not initialize protocol settings");
+                }
+                initMagic = magic;
+            }
+            else
+            {
+                if (magic != initMagic)
+                {
+                    throw new Exception($"ProtocolSettings already initialized with {initMagic}");
+                }
+            }
+        }
+
         public static IStore OpenCheckpoint(string checkpoint)
         {
             string checkpointTempPath;
@@ -55,15 +80,7 @@ namespace NeoTestHarness
             var cleanup = new FolderDisposer(checkpointTempPath);
 
             var magic = RocksDbStore.RestoreCheckpoint(checkpoint, checkpointTempPath);
-            var settings = new[] { KeyValuePair.Create("ProtocolConfiguration:Magic", $"{magic}") };
-            var protocolConfig = new ConfigurationBuilder()
-                .AddInMemoryCollection(settings)
-                .Build();
-
-            if (!ProtocolSettings.Initialize(protocolConfig))
-            {
-                throw new Exception("could not initialize protocol settings");
-            }
+            InitializeProtocolSettings(magic);
 
             return new CheckpointStore(
                 RocksDbStore.OpenReadOnly(checkpointTempPath),
