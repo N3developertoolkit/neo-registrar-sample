@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "neo.neon": {
+      "version": "3.0.0-mono-master-00349",
+      "commands": [
+        "neon"
+      ]
+    }
+  }
+}
