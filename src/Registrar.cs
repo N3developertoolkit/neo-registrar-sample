@@ -41,10 +41,10 @@ namespace DevHawk.Contracts
 
         public static bool Delete(string domain)
         {
-            // byte[] owner = Storage.Get(Storage.CurrentContext, domain);
-            // if (owner == null) return false;
-            // if (!Runtime.CheckWitness(owner)) return false;
-            // Storage.Delete(Storage.CurrentContext, domain);
+            var owner = (UInt160)Storage.Get(Storage.CurrentContext, domain);
+            if (owner == null) return false;
+            if (!Runtime.CheckWitness(owner)) return false;
+            Storage.Delete(Storage.CurrentContext, domain);
             return true;
         }
     }
