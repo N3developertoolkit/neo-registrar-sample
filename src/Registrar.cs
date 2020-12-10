@@ -8,7 +8,7 @@ using Neo.SmartContract.Framework.Services.System;
 
 namespace DevHawk.Contracts
 {
-    [ManifestName("DevHawk.Registrar")]
+    [DisplayName("DevHawk.Registrar")]
     [ManifestExtra("Author", "Harry Pierson")]
     [ManifestExtra("Email", "harrypierson@hotmail.com")]
     [ManifestExtra("Description", "This is an example contract")]

@@ -1,4 +1,5 @@
-# dotnet build C:\Users\harry\Source\neo\seattle\express\src\nxp3\nxp3.csproj
+dotnet tool restore
+dotnet build C:\Users\harry\Source\neo\seattle\express\src\nxp3\nxp3.csproj
 
 dotnet build ./src
 dotnet run -p C:\Users\harry\Source\neo\seattle\express\src\nxp3\nxp3.csproj --no-build -- reset -f

@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- <PackageReference Include="Neo.SmartContract.Framework" Version="3.0.0-mono-master-00349" /> -->
+    <PackageReference Include="Neo.SmartContract.Framework" Version="3.0.0-mono-master-00364" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\official\3neo-monorepo\devpack\src\Neo.SmartContract.Framework\Neo.SmartContract.Framework.csproj" />
+    <!-- <ProjectReference Include="..\..\..\..\official\3neo-monorepo\devpack\src\Neo.SmartContract.Framework\Neo.SmartContract.Framework.csproj" /> -->
   </ItemGroup>
 
 </Project>
