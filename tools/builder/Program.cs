@@ -62,6 +62,8 @@ class Program
         Target("sample-domain-registered-checkpoint", DependsOn("invoke-register-sample-domain"), () =>
             Neo.Checkpoint(CHECKPOINTS_PATH, "sample-domain-registered"));
 
+        Target("test", DependsOn("sample-domain-registered-checkpoint"), () =>
+            Command.Run("dotnet", "test"));
         Target("default", DependsOn("sample-domain-registered-checkpoint"));
         RunTargetsAndExit(args);
     }
