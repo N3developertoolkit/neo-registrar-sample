@@ -1,2 +1,2 @@
 @echo Off
-dotnet run --project targets -- %*
+dotnet run --project tools/builder -- %*
