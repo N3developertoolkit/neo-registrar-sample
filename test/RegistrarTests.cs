@@ -25,7 +25,7 @@ namespace DevHawkTest.Contracts
 
     public class SampleDomainRegisteredFixture : IDisposable
     {
-        const string PATH = @"C:\Users\harry\Source\neo\seattle\samples\registrar-sample\checkpoints\sample-domain-registered.nxp3-checkpoint";
+        const string PATH = @"../../../../checkpoints/sample-domain-registered.nxp3-checkpoint";
         string checkpointTempPath;
         RocksDbStore rocksDbStore;
 
@@ -63,7 +63,7 @@ namespace DevHawkTest.Contracts
             const string DOMAIN_NAME = "sample.domain";
             var DOMAIN_NAME_BYTES = Neo.Utility.StrictUTF8.GetBytes(DOMAIN_NAME);
 
-            using var store = Utility.OpenCheckpoint(@"C:\Users\harry\Source\neo\seattle\samples\registrar-sample\checkpoints\contract-deployed.nxp3-checkpoint");
+            using var store = Utility.OpenCheckpoint(@"../../../../checkpoints/contract-deployed.nxp3-checkpoint");
             using var snapshot = new SnapshotView(store);
 
             Assert.False(snapshot.GetContractStorages<DevHawk.Registrar>().Any());
