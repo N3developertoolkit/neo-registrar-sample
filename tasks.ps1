@@ -1,4 +1,5 @@
 dotnet tool restore
+del .\checkpoints\ -Force -Recurse
 mkdir ./checkpoints -force | out-null
 
 dotnet build ./src

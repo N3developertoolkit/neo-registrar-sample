@@ -10,22 +10,19 @@ using Neo.SmartContract;
 using System.Linq.Expressions;
 using Neo.VM;
 using Neo.Ledger;
+using Neo.SmartContract.Native;
 
 namespace NeoTestHarness
 {
     public static class Utility
     {
-        public static void DeployNativeContracts(IStore store)
+        // TODO: replace with ManagementContract.ListContracts when https://github.com/neo-project/neo/pull/2134 is merged
+        public static IEnumerable<ContractState> ListContracts(StoreView snapshot)
         {
-            using var snapshot = new SnapshotView(store);
-            if (snapshot.Contracts.Find().Any(c => c.Value.Id < 0)) return;
-
-            using var sb = new Neo.VM.ScriptBuilder();
-            sb.EmitSysCall(Neo.SmartContract.ApplicationEngine.Neo_Native_Deploy);
-
-            using var engine = Neo.SmartContract.ApplicationEngine.Run(sb.ToArray(), snapshot, persistingBlock: new Neo.Network.P2P.Payloads.Block());
-            if (engine.State != Neo.VM.VMState.HALT) throw new Exception("Neo_Native_Deploy failed");
-            snapshot.Commit();
+            const byte Prefix_Contract = 8;
+            var key = new KeyBuilder(NativeContract.Management.Id, Prefix_Contract);
+            byte[] listContractsPrefix = key.ToArray();
+            return snapshot.Storages.Find(listContractsPrefix).Select(kvp => kvp.Value.GetInteroperable<ContractState>());
         }
 
         class FolderDisposer : IDisposable
@@ -134,12 +131,12 @@ namespace NeoTestHarness
         public static ContractState GetContract<T>(this StoreView store)
         {
             var typeName = typeof(T).FullName;
-            foreach (var (key, value) in store.Contracts.Find())
+            foreach (var contractState in Utility.ListContracts(store))
             {
-                var name = value.Id >= 0 ? value.Manifest.Name : "Neo.NativeContracts." + value.Manifest.Name;
+                var name = contractState.Id >= 0 ? contractState.Manifest.Name : "Neo.SmartContract.Native." + contractState.Manifest.Name;
                 if (string.Equals(typeName, name))
                 {
-                    return value;
+                    return contractState;
                 }
             }
 

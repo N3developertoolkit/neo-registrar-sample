@@ -58,22 +58,6 @@ namespace NeoTestHarness
         public new event EventHandler<LogEventArgs>? Log;
         public new event EventHandler<NotifyEventArgs>? Notify;
 
-        public static void DeployNativeContracts(IStore store)
-        {
-            using var snapshot = new SnapshotView(store);
-            if (snapshot.Contracts.Find().Any(c => c.Value.Id < 0)) return;
-
-            byte[] script;
-            using (var sb = new Neo.VM.ScriptBuilder())
-            {
-                sb.EmitSysCall(ApplicationEngine.Neo_Native_Deploy);
-                script = sb.ToArray();
-            }
-            using var engine = ApplicationEngine.Run(script, snapshot, persistingBlock: new Block());
-            if (engine.State != Neo.VM.VMState.HALT) throw new Exception("Neo_Native_Deploy failed");
-            snapshot.Commit();
-        }
-
         private void OnLog(object? sender, LogEventArgs args)
         {
             if (ReferenceEquals(this, sender))

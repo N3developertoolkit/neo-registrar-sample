@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\lib-bctk\src\bctklib-3\bctklib-3.csproj"/>
+    <PackageReference Include="Neo.BlockchainToolkit3" Version="0.4.61-preview" />
   </ItemGroup>
 
 </Project>
