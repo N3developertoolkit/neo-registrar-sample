@@ -1,11 +1,21 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Target 
-      Name="NeonBuild"
-      AfterTargets="Build"
-      Inputs="$(TargetPath)" 
-      Outputs="$(TargetDir)$(TargetName).nef;$(TargetDir)$(TargetName).nefdbgnfo;$(TargetDir)$(TargetName).manifest.json;$(TargetDir)$(TargetName).abi.json;">
+  <Target Name="NeonBuild" AfterTargets="Build" Inputs="$(TargetPath)" 
+          Outputs="$(TargetDir)$(TargetName).nef;$(TargetDir)$(TargetName).nefdbgnfo;$(TargetDir)$(TargetName).manifest.json;$(TargetDir)$(TargetName).abi.json;">
     <Exec WorkingDirectory="$(TargetDir)" Command="dotnet neon -f $(TargetFileName)"/>
+  </Target>
+
+  <Target Name="NeoExpressBuild" AfterTargets="Build" Inputs="$(TargetDir)$(TargetName).nef" Outputs="$(BaseIntermediateOutputPath)nxp3">
+    <Exec Command="dotnet nxp3 reset --force --input $(MSBuildProjectDirectory)/../default.neo-express"/>
+    <Exec Command="dotnet nxp3 contract invoke $(MSBuildProjectDirectory)/../invoke-files/set-deploy-min.json genesis -i $(MSBuildProjectDirectory)/../default.neo-express"/>
+    <Exec Command="dotnet nxp3 transfer gas 10000 genesis owen --input $(MSBuildProjectDirectory)/../default.neo-express"/>
+    <Exec Command="dotnet nxp3 transfer gas 10000 genesis alice --input $(MSBuildProjectDirectory)/../default.neo-express"/>
+    <Exec Command="dotnet nxp3 transfer gas 10000 genesis bob --input $(MSBuildProjectDirectory)/../default.neo-express"/>
+    <Exec Command="dotnet nxp3 contract deploy $(TargetDir)$(TargetName).nef owen -i $(MSBuildProjectDirectory)/../default.neo-express"/>
+    <Exec Command="dotnet nxp3 checkpoint create $(MSBuildProjectDirectory)/../checkpoints/contract-deployed -f -i $(MSBuildProjectDirectory)/../default.neo-express"/>
+    <Exec Command="dotnet nxp3 contract invoke $(MSBuildProjectDirectory)/../invoke-files/register-sample-domain.neo-invoke.json bob -i $(MSBuildProjectDirectory)/../default.neo-express"/>
+    <Exec Command="dotnet nxp3 checkpoint create $(MSBuildProjectDirectory)/../checkpoints/sample-domain-registered -f -i $(MSBuildProjectDirectory)/../default.neo-express"/>
+    <Touch Files="$(BaseIntermediateOutputPath)nxp3" AlwaysCreate="true" />
   </Target>
 
 </Project>

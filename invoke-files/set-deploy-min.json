@@ -1,0 +1,5 @@
+{
+    "contract": "ManagementContract",
+    "operation": "setMinimumDeploymentFee",
+    "args": [ 1 ]
+}
