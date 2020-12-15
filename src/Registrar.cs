@@ -16,34 +16,34 @@ namespace DevHawk.Contracts
     {
         public static UInt160 Query(string domain)
         {
-            return UInt160.Zero;
-            // return Storage.Get(Storage.CurrentContext, domain);
+            byte[] value = Storage.Get(Storage.CurrentContext, domain);
+            return (value == null) ? UInt160.Zero : (UInt160)value;
         }
 
         public static bool Register(string domain, UInt160 owner)
         {
             if (!Runtime.CheckWitness(owner)) return false;
-            byte[] value = Storage.Get(Storage.CurrentContext, domain);
-            if (value != null) return false;
-            Storage.Put(Storage.CurrentContext, domain, (byte[])owner);
+            var currentOwner = Query(domain);
+            if (!currentOwner.IsZero) return false;
+            Storage.Put(Storage.CurrentContext, domain, (ByteString)owner);
             return true;
         }
 
         public static bool Transfer(string domain, UInt160 to)
         {
-            // if (!Runtime.CheckWitness(to)) return false;
-            // byte[] from = Storage.Get(Storage.CurrentContext, domain);
-            // if (from == null) return false;
-            // if (!Runtime.CheckWitness(from)) return false;
-            // Storage.Put(Storage.CurrentContext, domain, to);
+            if (!Runtime.CheckWitness(to)) return false;
+            var currentOwner = Query(domain);
+            if (!currentOwner.IsZero) return false;
+            if (!Runtime.CheckWitness(currentOwner)) return false;
+            Storage.Put(Storage.CurrentContext, domain, (ByteString)to);
             return true;
         }
 
         public static bool Delete(string domain)
         {
-            var owner = (UInt160)Storage.Get(Storage.CurrentContext, domain);
-            if (owner == null) return false;
-            if (!Runtime.CheckWitness(owner)) return false;
+            var currentOwner = Query(domain);
+            if (!currentOwner.IsZero) return false;
+            if (!Runtime.CheckWitness(currentOwner)) return false;
             Storage.Delete(Storage.CurrentContext, domain);
             return true;
         }
