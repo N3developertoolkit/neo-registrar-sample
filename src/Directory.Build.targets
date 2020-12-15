@@ -7,6 +7,7 @@
 
   <Target Name="NeoExpressBuild" AfterTargets="Build" Inputs="$(TargetDir)$(TargetName).nef" Outputs="$(BaseIntermediateOutputPath)nxp3">
     <Exec Command="dotnet nxp3 reset -f -i ../default.neo-express"/>
+    <!-- TODO: remove contract invoke set-deploy-min once https://github.com/neo-project/neo/issues/2151 is resolved -->
     <Exec Command="dotnet nxp3 contract invoke ../invoke-files/set-deploy-min.json genesis -i ../default.neo-express"/>
     <Exec Command="dotnet nxp3 transfer gas 10000 genesis owen -i ../default.neo-express"/>
     <Exec Command="dotnet nxp3 transfer gas 10000 genesis alice -i ../default.neo-express"/>
