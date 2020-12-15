@@ -11,9 +11,27 @@
             "program": "${workspaceFolder}/src/bin/Debug/netstandard2.1/registrar.nef",
             "invocation": {
                 "operation": "register",
-                "args": ["devhawk.net", "@NhGxW6BtLRhFLqh2oWqeRpNj8aNzKybRoV"]
+                "args": [
+                    "sample.domain",
+                    "@NhGxW6BtLRhFLqh2oWqeRpNj8aNzKybRoV"
+                ]
             },
-            "storage": []
+        },
+        {
+            "name": "delete",
+            "type": "neo-contract",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/bin/Debug/netstandard2.1/registrar.nef",
+            "invocation": {
+                "operation": "delete",
+                "args": [
+                    "sample.domain"
+                ]
+            },
+            "checkpoint": "./checkpoints/sample-domain-registered.nxp3-checkpoint",
+            "runtime": {
+                "check-witness": true
+            }
         }
     ]
 }

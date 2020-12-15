@@ -31,9 +31,9 @@ namespace DevHawk.Contracts
 
         public static bool Transfer(string domain, UInt160 to)
         {
-            if (!Runtime.CheckWitness(to)) return false;
             var currentOwner = Query(domain);
-            if (!currentOwner.IsZero) return false;
+            if (currentOwner.IsZero) return false;
+            if (!Runtime.CheckWitness(to)) return false;
             if (!Runtime.CheckWitness(currentOwner)) return false;
             Storage.Put(Storage.CurrentContext, domain, (ByteString)to);
             return true;
@@ -42,7 +42,7 @@ namespace DevHawk.Contracts
         public static bool Delete(string domain)
         {
             var currentOwner = Query(domain);
-            if (!currentOwner.IsZero) return false;
+            if (currentOwner.IsZero) return false;
             if (!Runtime.CheckWitness(currentOwner)) return false;
             Storage.Delete(Storage.CurrentContext, domain);
             return true;

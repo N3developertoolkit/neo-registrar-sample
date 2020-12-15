@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="Neo.BlockchainToolkit3" Version="0.4.61-preview" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -18,11 +19,15 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Moq" Version="4.15.2"/>
+    <PackageReference Include="Moq" Version="4.15.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Neo.BlockchainToolkit3" Version="0.4.61-preview" />
+    <!-- ensure contract is built (including neo express) before tests are built and run -->
+    <ProjectReference Include="..\src\registrar.csproj" >
+      <ExcludeAssets>all</ExcludeAssets >
+    </ProjectReference>
   </ItemGroup>
+
 
 </Project>
