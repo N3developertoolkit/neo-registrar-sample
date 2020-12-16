@@ -14,6 +14,22 @@ namespace NeoTestHarness
 
         protected CheckpointFixture(string checkpointPath)
         {
+            if (Path.IsPathFullyQualified(checkpointPath))
+            {
+                if (!File.Exists(checkpointPath)) throw new FileNotFoundException("couldn't find checkpoint", checkpointPath);
+            }
+            else
+            {
+                var directory = Path.GetFullPath(".");
+                var tempPath = Path.GetFullPath(checkpointPath, directory);
+                while (!File.Exists(tempPath))
+                {
+                    directory = Path.GetDirectoryName(directory);
+                    tempPath = Path.GetFullPath(checkpointPath, directory!);
+                }
+                checkpointPath = tempPath;
+            }
+
             do
             {
                 checkpointTempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());

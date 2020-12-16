@@ -8,12 +8,11 @@ using static DevHawk.RegistrarTests.Common;
 
 namespace DevHawk.RegistrarTests
 {
-
     public class ContractDeployedTests : IClassFixture<ContractDeployedTests.Fixture>
     {
         public class Fixture : CheckpointFixture
         {
-            const string PATH = @"../../../../checkpoints/contract-deployed.nxp3-checkpoint";
+            const string PATH = "checkpoints/contract-deployed.nxp3-checkpoint";
             public Fixture() : base(PATH) { }
         }
 
