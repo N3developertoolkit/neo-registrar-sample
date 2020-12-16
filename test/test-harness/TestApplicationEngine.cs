@@ -28,14 +28,14 @@ namespace NeoTestHarness
             builder.Add(HashMethodName("System.Blockchain.GetTransactionFromBlock"), GetTransactionFromBlockOverride);
             overriddenServices = builder.ToImmutable();
 
-            uint HashMethodName(string name)
+            static uint HashMethodName(string name)
             {
                 return BitConverter.ToUInt32(System.Text.Encoding.ASCII.GetBytes(name).Sha256(), 0);
             }
         }
 
         private readonly WitnessChecker witnessChecker;
-        private readonly Lazy<IReadOnlyDictionary<uint, UInt256>> blockIndexMap;
+        private readonly Lazy<IReadOnlyList<UInt256>> blockIndexMap;
 
         public TestApplicationEngine(StoreView snapshot) : this(TriggerType.Application, null, snapshot, ApplicationEngine.TestModeGas, _ => true)
         {
@@ -45,11 +45,35 @@ namespace NeoTestHarness
             : base(trigger, container, snapshot, gas)
         {
             this.witnessChecker = witnessChecker ?? CheckWitness;
-            this.blockIndexMap = new Lazy<IReadOnlyDictionary<uint, UInt256>>(() =>
-                snapshot.Blocks.Find().ToDictionary(t => t.Value.Index, t => t.Value.Hash));
+            this.blockIndexMap = new Lazy<IReadOnlyList<UInt256>>(() => LoadBlockIndexMap(snapshot));
 
             ApplicationEngine.Log += OnLog;
             ApplicationEngine.Notify += OnNotify;
+        }
+
+        static IReadOnlyList<UInt256> LoadBlockIndexMap(StoreView snapshot)
+        {
+            // header index logic lifted from Blockchain ctor
+            var builder = ImmutableList.CreateBuilder<UInt256>();
+            builder.AddRange(snapshot.HeaderHashList.Find().OrderBy(p => (uint)p.Key).SelectMany(p => p.Value.Hashes));
+            if (builder.Count == 0)
+            {
+                builder.AddRange(snapshot.Blocks.Find().OrderBy(p => p.Value.Index).Select(p => p.Key));
+            }
+            else
+            {
+                var hashIndex = snapshot.HeaderHashIndex.Get();
+                if (hashIndex.Index >= builder.Count)
+                {
+                    var cache = snapshot.Blocks;
+                    for (UInt256 hash = hashIndex.Hash; hash != builder[builder.Count - 1];)
+                    {
+                        builder.Insert(builder.Count, hash);
+                        hash = cache[hash].PrevHash;
+                    }
+                }
+            }
+            return builder.ToImmutable();
         }
 
         public override void Dispose()
@@ -154,12 +178,13 @@ namespace NeoTestHarness
 
             if (indexOrHash.Length < UInt256.Length)
             {
-                var index = new BigInteger(indexOrHash);
-                if (index < uint.MinValue || index > uint.MaxValue)
+                var biIndex = new BigInteger(indexOrHash);
+                if (biIndex < uint.MinValue || biIndex > uint.MaxValue)
                     throw new ArgumentOutOfRangeException(nameof(indexOrHash));
-                if (blockIndexMap.Value.TryGetValue((uint)index, out var hash))
+                var index = (uint)biIndex;
+                if (blockIndexMap.Value.Count <= index)
                 {
-                    return hash;
+                    return blockIndexMap.Value[(int)index];
                 }
             }
 
