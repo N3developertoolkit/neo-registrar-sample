@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Microsoft.Extensions.Configuration;
 using Neo;
 using Neo.BlockchainToolkit.Persistence;
@@ -57,7 +58,8 @@ namespace NeoTestHarness
         static void InitializeProtocolSettings(long magic)
         {
             if (magic > uint.MaxValue || magic < 0) throw new Exception($"invalid magic value {magic}");
-            if (initMagic < 0)
+
+            if (Interlocked.CompareExchange(ref initMagic, magic, -1) == -1)
             {
                 var settings = new[] { KeyValuePair.Create("ProtocolConfiguration:Magic", $"{(uint)magic}") };
                 var protocolConfig = new ConfigurationBuilder()
@@ -66,9 +68,8 @@ namespace NeoTestHarness
 
                 if (!ProtocolSettings.Initialize(protocolConfig))
                 {
-                    throw new Exception("could not initialize protocol settings");
+                    throw new Exception($"could not initialize protocol settings {initMagic} / {magic}");
                 }
-                initMagic = magic;
             }
             else
             {
