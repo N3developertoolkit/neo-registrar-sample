@@ -1,9 +1,9 @@
-using System;
-using Neo;
-using Xunit;
 using System.Linq;
+using Neo;
 using Neo.Persistence;
 using NeoTestHarness;
+using Xunit;
+
 using static DevHawk.RegistrarTests.Common;
 
 namespace DevHawk.RegistrarTests

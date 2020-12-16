@@ -1,16 +1,13 @@
 using System;
-using Neo.Persistence;
-using System.Linq;
-using System.IO;
 using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
-using Neo;
-using Neo.BlockchainToolkit.Persistence;
-using Neo.SmartContract;
+using System.Linq;
 using System.Linq.Expressions;
-using Neo.VM;
+using Neo;
 using Neo.Ledger;
+using Neo.Persistence;
+using Neo.SmartContract;
 using Neo.SmartContract.Native;
+using Neo.VM;
 
 namespace NeoTestHarness
 {

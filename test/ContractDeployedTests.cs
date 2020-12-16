@@ -1,12 +1,10 @@
-using System;
+using System.Linq;
 using Neo;
+using Neo.Persistence;
+using NeoTestHarness;
 using Xunit;
+
 using static DevHawk.RegistrarTests.Common;
-    using System.Linq;
-    using Moq;
-    using Neo.Persistence;
-    using Neo.SmartContract;
-    using NeoTestHarness;
 
 namespace DevHawk.RegistrarTests
 {
