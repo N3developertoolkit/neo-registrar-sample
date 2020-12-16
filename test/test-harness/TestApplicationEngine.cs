@@ -37,6 +37,10 @@ namespace NeoTestHarness
         private readonly WitnessChecker witnessChecker;
         private readonly Lazy<IReadOnlyDictionary<uint, UInt256>> blockIndexMap;
 
+        public TestApplicationEngine(StoreView snapshot) : this(TriggerType.Application, null, snapshot, ApplicationEngine.TestModeGas, _ => true)
+        {
+        }
+
         public TestApplicationEngine(TriggerType trigger, IVerifiable? container, StoreView snapshot, long gas, WitnessChecker? witnessChecker)
             : base(trigger, container, snapshot, gas)
         {

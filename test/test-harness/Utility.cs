@@ -16,15 +16,6 @@ namespace NeoTestHarness
 {
     public static class Utility
     {
-        // TODO: replace with ManagementContract.ListContracts when https://github.com/neo-project/neo/pull/2134 is merged
-        public static IEnumerable<ContractState> ListContracts(StoreView snapshot)
-        {
-            const byte Prefix_Contract = 8;
-            var key = new KeyBuilder(NativeContract.Management.Id, Prefix_Contract);
-            byte[] listContractsPrefix = key.ToArray();
-            return snapshot.Storages.Find(listContractsPrefix).Select(kvp => kvp.Value.GetInteroperable<ContractState>());
-        }
-
         class FolderDisposer : IDisposable
         {
             readonly string pathToDelete;
@@ -123,6 +114,9 @@ namespace NeoTestHarness
                 .Select(s => (s.Key.Key, s.Value));
         }
 
+        public static StorageItem GetContractStorageItem<T>(this StoreView store, ReadOnlyMemory<byte> key)
+            => store.GetContractStorages<DevHawk.Registrar>().Single(s => s.key.AsSpan().SequenceEqual(key.Span)).item;
+
         public static UInt160 GetContractAddress<T>(this StoreView store)
         {
             return store.GetContract<T>().Hash;
@@ -131,7 +125,7 @@ namespace NeoTestHarness
         public static ContractState GetContract<T>(this StoreView store)
         {
             var typeName = typeof(T).FullName;
-            foreach (var contractState in Utility.ListContracts(store))
+            foreach (var contractState in NativeContract.Management.ListContracts(store))
             {
                 var name = contractState.Id >= 0 ? contractState.Manifest.Name : "Neo.SmartContract.Native." + contractState.Manifest.Name;
                 if (string.Equals(typeName, name))
