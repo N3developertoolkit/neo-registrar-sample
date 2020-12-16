@@ -7,6 +7,7 @@ namespace DevHawk
     {
         UInt160 query(string domain);
         bool register(string domain, UInt160 owner);
+        bool transfer(string domain, UInt160 to);
         bool delete(string domain);
     }
 }
