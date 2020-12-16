@@ -10,6 +10,7 @@ namespace DevHawk.RegistrarTests
 {
     public class ContractDeployedTests : IClassFixture<ContractDeployedTests.Fixture>
     {
+        // Fixture is used to share checkpoint across multiple tests
         public class Fixture : CheckpointFixture
         {
             const string PATH = "checkpoints/contract-deployed.nxp3-checkpoint";
@@ -29,17 +30,20 @@ namespace DevHawk.RegistrarTests
             using var store = fixture.GetCheckpointStore();
             using var snapshot = new SnapshotView(store);
 
+            // pretest check to ensure storage is empty as expected
             Assert.False(snapshot.GetContractStorages<DevHawk.Registrar>().Any());
 
-            var script = snapshot.CreateScript<DevHawk.Registrar>(c => c.register(DOMAIN_NAME, ALICE));
-
+            // AssertScript converts the provided expression(s) into a Neo script
+            // loads them into the engine, executes it and asserts the results
             using var engine = new TestApplicationEngine(snapshot);
-            engine.LoadScript(script);
-            engine.AssertExecute();
+            engine.AssertScript<Registrar>(c => c.register(DOMAIN_NAME, ALICE));
 
-            Assert.Single(engine.ResultStack);
+            // check the execution results one at a time
             Assert.True(engine.ResultStack.Pop().GetBoolean());
+            // Ensure there are no more results than expected
+            Assert.Empty(engine.ResultStack);
 
+            // ensure correct storage item was created 
             var storageItem = snapshot.GetContractStorageItem<DevHawk.Registrar>(DOMAIN_NAME_BYTES);
             Assert.Equal(ALICE, new UInt160(storageItem.Value));
         }

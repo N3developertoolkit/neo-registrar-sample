@@ -10,6 +10,7 @@ namespace DevHawk.RegistrarTests
 {
     public class SampleDomainRegisteredTests : IClassFixture<SampleDomainRegisteredTests.Fixture>
     {
+        // Fixture is used to share checkpoint across multiple tests
         public class Fixture : CheckpointFixture
         {
             const string PATH = "checkpoints/sample-domain-registered.nxp3-checkpoint";
@@ -32,14 +33,11 @@ namespace DevHawk.RegistrarTests
             var storageItem = snapshot.GetContractStorageItem<DevHawk.Registrar>(DOMAIN_NAME_BYTES);
             Assert.Equal(BOB, new UInt160(storageItem.Value));
 
-            var script = snapshot.CreateScript<DevHawk.Registrar>(c => c.register(DOMAIN_NAME, ALICE));
-
             using var engine = new TestApplicationEngine(snapshot);
-            engine.LoadScript(script);
-            engine.AssertExecute();
+            engine.AssertScript<Registrar>(c => c.register(DOMAIN_NAME, ALICE));
 
-            Assert.Single(engine.ResultStack);
             Assert.False(engine.ResultStack.Pop().GetBoolean());
+            Assert.Empty(engine.ResultStack);
         }
 
         [Fact]
@@ -51,14 +49,11 @@ namespace DevHawk.RegistrarTests
             var storageItem = snapshot.GetContractStorageItem<DevHawk.Registrar>(DOMAIN_NAME_BYTES);
             Assert.Equal(BOB, new UInt160(storageItem.Value));
 
-            var script = snapshot.CreateScript<DevHawk.Registrar>(c => c.delete(DOMAIN_NAME));
-
             using var engine = new TestApplicationEngine(snapshot);
-            engine.LoadScript(script);
-            engine.AssertExecute();
+            engine.AssertScript<Registrar>(c => c.delete(DOMAIN_NAME));
 
-            Assert.Single(engine.ResultStack);
             Assert.True(engine.ResultStack.Pop().GetBoolean());
+            Assert.Empty(engine.ResultStack);
 
             Assert.False(snapshot.GetContractStorages<DevHawk.Registrar>().Any());
         }

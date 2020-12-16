@@ -13,14 +13,68 @@ namespace NeoTestHarness
 {
     public static class Extensions
     {
+
+        public static VMState AssertScript<T>(this TestApplicationEngine engine, Expression<Action<T>> expression)
+            where T : class
+        {
+            engine.LoadScript<T>(expression);
+            return engine.AssertExecute();
+        }
+
+        public static VMState AssertScript<T>(this TestApplicationEngine engine, Expression<Action<T>> expression1, Expression<Action<T>> expression2)
+            where T : class
+        {
+            engine.LoadScript<T>(expression1, expression2);
+            return engine.AssertExecute();
+        }
+
+        public static VMState AssertScript<T>(this TestApplicationEngine engine, params Expression<Action<T>>[] expressions)
+            where T : class
+        {
+            engine.LoadScript<T>(expressions);
+            return engine.AssertExecute();
+        }
+
+        public static void LoadScript<T>(this TestApplicationEngine engine, Expression<Action<T>> expression)
+            where T : class
+        {
+            var script = engine.Snapshot.CreateScript<T>(expression);
+            engine.LoadScript(script);
+        }
+
+        public static void LoadScript<T>(this TestApplicationEngine engine, Expression<Action<T>> expression1, Expression<Action<T>> expression2)
+            where T : class
+        {
+            var script = engine.Snapshot.CreateScript<T>(expression1, expression2);
+            engine.LoadScript(script);
+        }
+
+        public static void LoadScript<T>(this TestApplicationEngine engine, params Expression<Action<T>>[] expressions)
+            where T : class
+        {
+            var script = engine.Snapshot.CreateScript<T>(expressions);
+            engine.LoadScript(script);
+        }
+
         public static Script CreateScript<T>(this StoreView store, Expression<Action<T>> expression)
+            where T : class
         {
             using var builder = new ScriptBuilder();
             builder.AddInvoke<T>(store, expression);
             return builder.ToArray();
         }
 
+        public static Script CreateScript<T>(this StoreView store, Expression<Action<T>> expression1, Expression<Action<T>> expression2)
+            where T : class
+        {
+            using var builder = new ScriptBuilder();
+            builder.AddInvoke<T>(store, expression1);
+            builder.AddInvoke<T>(store, expression2);
+            return builder.ToArray();
+        }
+
         public static Script CreateScript<T>(this StoreView store, params Expression<Action<T>>[] expressions)
+            where T : class
         {
             using var builder = new ScriptBuilder();
             for (int i = 0; i < expressions.Length; i++)
@@ -31,6 +85,7 @@ namespace NeoTestHarness
         }
 
         public static void AddInvoke<T>(this ScriptBuilder builder, StoreView store, Expression<Action<T>> expression)
+            where T : class
         {
             var methodCall = (MethodCallExpression)expression.Body;
 
@@ -55,6 +110,7 @@ namespace NeoTestHarness
         }
 
         public static IEnumerable<(byte[] key, StorageItem item)> GetContractStorages<T>(this StoreView store)
+            where T : class
         {
             var contract = store.GetContract<T>();
             var prefix = StorageKey.CreateSearchPrefix(contract.Id, default);
@@ -63,14 +119,15 @@ namespace NeoTestHarness
         }
 
         public static StorageItem GetContractStorageItem<T>(this StoreView store, ReadOnlyMemory<byte> key)
+            where T : class
             => store.GetContractStorages<DevHawk.Registrar>().Single(s => s.key.AsSpan().SequenceEqual(key.Span)).item;
 
         public static UInt160 GetContractAddress<T>(this StoreView store)
-        {
-            return store.GetContract<T>().Hash;
-        }
+            where T : class 
+            => store.GetContract<T>().Hash;
 
         public static ContractState GetContract<T>(this StoreView store)
+            where T : class
         {
             var typeName = typeof(T).FullName;
             foreach (var contractState in NativeContract.Management.ListContracts(store))
