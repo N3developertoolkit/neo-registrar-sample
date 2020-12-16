@@ -14,71 +14,22 @@ using Neo.SmartContract.Native;
 
 namespace NeoTestHarness
 {
-    public static class Utility
+    public static class Extensions
     {
-        class FolderDisposer : IDisposable
-        {
-            readonly string pathToDelete;
-
-            public FolderDisposer(string pathToDelete)
-            {
-                this.pathToDelete = pathToDelete;
-            }
-
-            public void Dispose()
-            {
-                if (Directory.Exists(pathToDelete)) Directory.Delete(pathToDelete, true);
-            }
-        }
-
-        static long initMagic = -1;
-        public static void InitializeProtocolSettings(long magic)
-        {
-            if (initMagic < 0)
-            {
-                var settings = new[] { KeyValuePair.Create("ProtocolConfiguration:Magic", $"{magic}") };
-                var protocolConfig = new ConfigurationBuilder()
-                    .AddInMemoryCollection(settings)
-                    .Build();
-
-                if (!ProtocolSettings.Initialize(protocolConfig))
-                {
-                    throw new Exception("could not initialize protocol settings");
-                }
-                initMagic = magic;
-            }
-            else
-            {
-                if (magic != initMagic)
-                {
-                    throw new Exception($"ProtocolSettings already initialized with {initMagic}");
-                }
-            }
-        }
-
-        public static IStore OpenCheckpoint(string checkpoint)
-        {
-            string checkpointTempPath;
-            do
-            {
-                checkpointTempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            }
-            while (Directory.Exists(checkpointTempPath));
-
-            var cleanup = new FolderDisposer(checkpointTempPath);
-
-            var magic = RocksDbStore.RestoreCheckpoint(checkpoint, checkpointTempPath);
-            InitializeProtocolSettings(magic);
-
-            return new CheckpointStore(
-                RocksDbStore.OpenReadOnly(checkpointTempPath),
-                cleanup);
-        }
-
         public static Script CreateScript<T>(this StoreView store, Expression<Action<T>> expression)
         {
             using var builder = new ScriptBuilder();
             builder.AddInvoke<T>(store, expression);
+            return builder.ToArray();
+        }
+
+        public static Script CreateScript<T>(this StoreView store, params Expression<Action<T>>[] expressions)
+        {
+            using var builder = new ScriptBuilder();
+            for (int i = 0; i < expressions.Length; i++)
+            {
+                builder.AddInvoke(store, expressions[i]);
+            }
             return builder.ToArray();
         }
 
