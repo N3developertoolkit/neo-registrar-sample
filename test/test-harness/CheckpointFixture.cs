@@ -40,9 +40,10 @@ namespace NeoTestHarness
         static long initMagic = -1;
         static void InitializeProtocolSettings(long magic)
         {
+            if (magic > uint.MaxValue || magic < 0) throw new Exception($"invalid magic value {magic}");
             if (initMagic < 0)
             {
-                var settings = new[] { KeyValuePair.Create("ProtocolConfiguration:Magic", $"{magic}") };
+                var settings = new[] { KeyValuePair.Create("ProtocolConfiguration:Magic", $"{(uint)magic}") };
                 var protocolConfig = new ConfigurationBuilder()
                     .AddInMemoryCollection(settings)
                     .Build();
@@ -57,7 +58,7 @@ namespace NeoTestHarness
             {
                 if (magic != initMagic)
                 {
-                    throw new Exception($"ProtocolSettings already initialized with {initMagic}");
+                    throw new Exception($"ProtocolSettings already initialized with {initMagic} (new magic: {magic})");
                 }
             }
         }
