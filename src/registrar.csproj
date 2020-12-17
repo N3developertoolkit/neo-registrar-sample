@@ -5,11 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Neo.SmartContract.Framework" Version="3.0.0-mono-master-00389" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <!-- <ProjectReference Include="..\..\..\..\official\3neo-monorepo\devpack\src\Neo.SmartContract.Framework\Neo.SmartContract.Framework.csproj" /> -->
+    <PackageReference Include="Neo.SmartContract.Framework" Version="3.0.0-mono-preview4-00286" />
   </ItemGroup>
 
   <Target Name="NeonBuild" AfterTargets="Build" Inputs="$(TargetPath)" 

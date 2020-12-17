@@ -30,7 +30,7 @@ namespace DevHawk.RegistrarTests
             using var store = fixture.GetCheckpointStore();
             using var snapshot = new SnapshotView(store);
 
-            var storageItem = snapshot.GetContractStorageItem<DevHawk.Registrar>(DOMAIN_NAME_BYTES);
+            var storageItem = snapshot.GetContractStorageItem<Registrar>(DOMAIN_NAME_BYTES);
             Assert.Equal(BOB, new UInt160(storageItem.Value));
 
             using var engine = new TestApplicationEngine(snapshot);
@@ -46,7 +46,7 @@ namespace DevHawk.RegistrarTests
             using var store = fixture.GetCheckpointStore();
             using var snapshot = new SnapshotView(store);
 
-            var storageItem = snapshot.GetContractStorageItem<DevHawk.Registrar>(DOMAIN_NAME_BYTES);
+            var storageItem = snapshot.GetContractStorageItem<Registrar>(DOMAIN_NAME_BYTES);
             Assert.Equal(BOB, new UInt160(storageItem.Value));
 
             using var engine = new TestApplicationEngine(snapshot);
@@ -55,7 +55,7 @@ namespace DevHawk.RegistrarTests
             Assert.True(engine.ResultStack.Pop().GetBoolean());
             Assert.Empty(engine.ResultStack);
 
-            Assert.False(snapshot.GetContractStorages<DevHawk.Registrar>().Any());
+            Assert.False(snapshot.GetContractStorages<Registrar>().Any());
         }
     }
 }

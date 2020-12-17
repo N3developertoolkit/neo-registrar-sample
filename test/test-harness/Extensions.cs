@@ -120,7 +120,7 @@ namespace NeoTestHarness
 
         public static StorageItem GetContractStorageItem<T>(this StoreView store, ReadOnlyMemory<byte> key)
             where T : class
-            => store.GetContractStorages<DevHawk.Registrar>().Single(s => s.key.AsSpan().SequenceEqual(key.Span)).item;
+            => store.GetContractStorages<T>().Single(s => s.key.AsSpan().SequenceEqual(key.Span)).item;
 
         public static UInt160 GetContractAddress<T>(this StoreView store)
             where T : class 

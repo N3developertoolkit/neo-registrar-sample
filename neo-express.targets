@@ -2,8 +2,6 @@
 
   <Target Name="NeoExpressBuild" AfterTargets="Build" Inputs="$(MSBuildThisFileDirectory)/src/bin/Debug/netstandard2.1/registrar.nef" Outputs="$(BaseIntermediateOutputPath)nxp3">
     <Exec Command="dotnet nxp3 reset -f" WorkingDirectory="$(MSBuildThisFileDirectory)"/>
-    <!-- TODO: remove contract invoke set-deploy-min once https://github.com/neo-project/neo/issues/2151 is resolved -->
-    <Exec Command="dotnet nxp3 contract invoke ./invoke-files/set-deploy-min.json genesis" WorkingDirectory="$(MSBuildThisFileDirectory)"/>
     <Exec Command="dotnet nxp3 transfer gas 10000 genesis owen" WorkingDirectory="$(MSBuildThisFileDirectory)"/>
     <Exec Command="dotnet nxp3 transfer gas 10000 genesis alice" WorkingDirectory="$(MSBuildThisFileDirectory)"/>
     <Exec Command="dotnet nxp3 transfer gas 10000 genesis bob" WorkingDirectory="$(MSBuildThisFileDirectory)"/>

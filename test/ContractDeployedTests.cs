@@ -31,7 +31,7 @@ namespace DevHawk.RegistrarTests
             using var snapshot = new SnapshotView(store);
 
             // pretest check to ensure storage is empty as expected
-            Assert.False(snapshot.GetContractStorages<DevHawk.Registrar>().Any());
+            Assert.False(snapshot.GetContractStorages<Registrar>().Any());
 
             // AssertScript converts the provided expression(s) into a Neo script
             // loads them into the engine, executes it and asserts the results
@@ -44,7 +44,7 @@ namespace DevHawk.RegistrarTests
             Assert.Empty(engine.ResultStack);
 
             // ensure correct storage item was created 
-            var storageItem = snapshot.GetContractStorageItem<DevHawk.Registrar>(DOMAIN_NAME_BYTES);
+            var storageItem = snapshot.GetContractStorageItem<Registrar>(DOMAIN_NAME_BYTES);
             Assert.Equal(ALICE, new UInt160(storageItem.Value));
         }
     }
