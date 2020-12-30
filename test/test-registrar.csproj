@@ -9,7 +9,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
-    <PackageReference Include="Neo.BlockchainToolkit3" Version="0.4.67-preview" />
+    <!-- <PackageReference Include="Neo.Assertions" Version="0.4.6-preview" /> -->
+    <PackageReference Include="Neo.Test.Harness" Version="0.4.6-preview" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -24,9 +25,10 @@
 
   <ItemGroup>
     <!-- ensure contract is built (including neo express) before tests are built and run -->
-    <ProjectReference Include="..\src\registrar.csproj" >
-      <ExcludeAssets>all</ExcludeAssets >
+    <ProjectReference Include="..\src\registrar.csproj">
+      <ExcludeAssets>all</ExcludeAssets>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\neo-test\src\assertions\assertions.csproj" />
   </ItemGroup>
 
 

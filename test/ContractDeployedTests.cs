@@ -1,6 +1,8 @@
 using System.Linq;
-using Neo;
+using FluentAssertions;
+using Neo.Assertions;
 using Neo.Persistence;
+using Neo.VM;
 using NeoTestHarness;
 using Xunit;
 
@@ -8,18 +10,12 @@ using static DevHawk.RegistrarTests.Common;
 
 namespace DevHawk.RegistrarTests
 {
-    public class ContractDeployedTests : IClassFixture<ContractDeployedTests.Fixture>
+    [CheckpointPath("checkpoints/contract-deployed.nxp3-checkpoint")]
+    public class ContractDeployedTests : IClassFixture<CheckpointFixture<ContractDeployedTests>>
     {
-        // Fixture is used to share checkpoint across multiple tests
-        public class Fixture : CheckpointFixture
-        {
-            const string PATH = "checkpoints/contract-deployed.nxp3-checkpoint";
-            public Fixture() : base(PATH) { }
-        }
+        readonly CheckpointFixture fixture;
 
-        readonly Fixture fixture;
-
-        public ContractDeployedTests(Fixture fixture)
+        public ContractDeployedTests(CheckpointFixture<ContractDeployedTests> fixture)
         {
             this.fixture = fixture;
         }
@@ -31,21 +27,21 @@ namespace DevHawk.RegistrarTests
             using var snapshot = new SnapshotView(store);
 
             // pretest check to ensure storage is empty as expected
-            Assert.False(snapshot.GetContractStorages<Registrar>().Any());
+            snapshot.GetContractStorages<Registrar>().Any().Should().BeFalse();
 
-            // AssertScript converts the provided expression(s) into a Neo script
-            // loads them into the engine, executes it and asserts the results
-            using var engine = new TestApplicationEngine(snapshot);
-            engine.AssertScript<Registrar>(c => c.register(DOMAIN_NAME, ALICE));
+            // ExecuteScript converts the provided expression(s) into a Neo script
+            // loads them into the engine and executes it 
+            using var engine = new TestApplicationEngine(snapshot, ALICE);
+            engine.ExecuteScript<Registrar>(c => c.register(DOMAIN_NAME, ALICE));
 
-            // check the execution results one at a time
-            Assert.True(engine.ResultStack.Pop().GetBoolean());
-            // Ensure there are no more results than expected
-            Assert.Empty(engine.ResultStack);
+            engine.State.Should().Be(VMState.HALT);
+            engine.ResultStack.Should().HaveCount(1);
+            engine.ResultStack.Peek(0).Should().BeTrue();
 
             // ensure correct storage item was created 
-            var storageItem = snapshot.GetContractStorageItem<Registrar>(DOMAIN_NAME_BYTES);
-            Assert.Equal(ALICE, new UInt160(storageItem.Value));
+            var storages = snapshot.GetContractStorages<Registrar>();
+            storages.TryGetValue(DOMAIN_NAME_BYTES, out var item).Should().BeTrue();
+            item!.Should().Be(ALICE);
         }
     }
 }

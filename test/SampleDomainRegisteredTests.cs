@@ -1,6 +1,9 @@
 using System.Linq;
-using Neo;
+using FluentAssertions;
+using Neo.Assertions;
 using Neo.Persistence;
+using Neo.SmartContract;
+using Neo.VM;
 using NeoTestHarness;
 using Xunit;
 
@@ -8,18 +11,12 @@ using static DevHawk.RegistrarTests.Common;
 
 namespace DevHawk.RegistrarTests
 {
-    public class SampleDomainRegisteredTests : IClassFixture<SampleDomainRegisteredTests.Fixture>
+    [CheckpointPath("checkpoints/sample-domain-registered.nxp3-checkpoint")]
+    public class SampleDomainRegisteredTests : IClassFixture<CheckpointFixture<SampleDomainRegisteredTests>>
     {
-        // Fixture is used to share checkpoint across multiple tests
-        public class Fixture : CheckpointFixture
-        {
-            const string PATH = "checkpoints/sample-domain-registered.nxp3-checkpoint";
-            public Fixture() : base(PATH) { }
-        }
+        readonly CheckpointFixture fixture;
 
-        readonly Fixture fixture;
-
-        public SampleDomainRegisteredTests(Fixture fixture)
+        public SampleDomainRegisteredTests(CheckpointFixture<SampleDomainRegisteredTests> fixture)
         {
             this.fixture = fixture;
         }
@@ -30,14 +27,20 @@ namespace DevHawk.RegistrarTests
             using var store = fixture.GetCheckpointStore();
             using var snapshot = new SnapshotView(store);
 
-            var storageItem = snapshot.GetContractStorageItem<Registrar>(DOMAIN_NAME_BYTES);
-            Assert.Equal(BOB, new UInt160(storageItem.Value));
+            var storages = snapshot.GetContractStorages<Registrar>();
+            storages.TryGetValue(DOMAIN_NAME_BYTES, out var item).Should().BeTrue();
+            item!.Should().Be(BOB);
 
-            using var engine = new TestApplicationEngine(snapshot);
-            engine.AssertScript<Registrar>(c => c.register(DOMAIN_NAME, ALICE));
+            using var engine = new TestApplicationEngine(snapshot, ALICE);
+            using var monitor = engine.Monitor();
+            engine.ExecuteScript<Registrar>(c => c.register(DOMAIN_NAME, ALICE));
+            monitor.Should().Raise("Log")
+                .WithSender(engine)
+                .WithArgs<LogEventArgs>(args => args.Message == "Domain already registered");
 
-            Assert.False(engine.ResultStack.Pop().GetBoolean());
-            Assert.Empty(engine.ResultStack);
+            engine.State.Should().Be(VMState.HALT);
+            engine.ResultStack.Should().HaveCount(1);
+            engine.ResultStack.Peek(0).Should().BeFalse();
         }
 
         [Fact]
@@ -46,16 +49,18 @@ namespace DevHawk.RegistrarTests
             using var store = fixture.GetCheckpointStore();
             using var snapshot = new SnapshotView(store);
 
-            var storageItem = snapshot.GetContractStorageItem<Registrar>(DOMAIN_NAME_BYTES);
-            Assert.Equal(BOB, new UInt160(storageItem.Value));
+            var storages = snapshot.GetContractStorages<Registrar>();
+            storages.TryGetValue(DOMAIN_NAME_BYTES, out var item).Should().BeTrue();
+            item!.Should().Be(BOB);
 
-            using var engine = new TestApplicationEngine(snapshot);
-            engine.AssertScript<Registrar>(c => c.delete(DOMAIN_NAME));
+            using var engine = new TestApplicationEngine(snapshot, BOB);
+            engine.ExecuteScript<Registrar>(c => c.delete(DOMAIN_NAME));
 
-            Assert.True(engine.ResultStack.Pop().GetBoolean());
-            Assert.Empty(engine.ResultStack);
+            engine.State.Should().Be(VMState.HALT);
+            engine.ResultStack.Should().HaveCount(1);
+            engine.ResultStack.Peek(0).Should().BeTrue();
 
-            Assert.False(snapshot.GetContractStorages<Registrar>().Any());
+            snapshot.GetContractStorages<Registrar>().Any().Should().BeFalse();
         }
     }
 }
