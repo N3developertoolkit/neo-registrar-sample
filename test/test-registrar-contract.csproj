@@ -5,12 +5,18 @@
     <Nullable>enable</Nullable>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
+    <NeoTestPackagesVersion>0.4.10-preview*</NeoTestPackagesVersion>
   </PropertyGroup>
 
   <ItemGroup>
+    <ContractUnderTest Include="..\src\registrar.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
-    <PackageReference Include="Neo.Assertions" Version="0.4.6-preview" />
-    <PackageReference Include="Neo.Test.Harness" Version="0.4.6-preview" />
+    <PackageReference Include="Neo.Assertions" Version="$(NeoTestPackagesVersion)" />
+    <PackageReference Include="Neo.BuildTasks" Version="$(NeoTestPackagesVersion)" PrivateAssets="All" />
+    <PackageReference Include="Neo.Test.Harness" Version="$(NeoTestPackagesVersion)" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -22,13 +28,5 @@
     </PackageReference>
     <PackageReference Include="Moq" Version="4.15.2" />
   </ItemGroup>
-
-  <ItemGroup>
-    <!-- ensure contract is built (including neo express) before tests are built and run -->
-    <ProjectReference Include="..\src\registrar.csproj">
-      <ExcludeAssets>all</ExcludeAssets>
-    </ProjectReference>
-  </ItemGroup>
-
 
 </Project>

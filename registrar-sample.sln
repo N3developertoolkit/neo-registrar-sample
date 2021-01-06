@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "registrar", "src\registrar.csproj", "{34F6DE7D-8118-4BF7-AF57-E0A255DAC86F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test-registrar", "test\test-registrar.csproj", "{B2A86776-D325-4B1E-81DB-2ADDBE537A1B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test-registrar-contract", "test\test-registrar-contract.csproj", "{B2A86776-D325-4B1E-81DB-2ADDBE537A1B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
