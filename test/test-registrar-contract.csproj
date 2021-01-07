@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
-    <NeoTestPackagesVersion>0.4.10-preview*</NeoTestPackagesVersion>
+    <NeoTestPackagesVersion>0.4.11-preview</NeoTestPackagesVersion>
   </PropertyGroup>
 
   <ItemGroup>
