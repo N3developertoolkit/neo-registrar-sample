@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <TargetFramework>net5.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <NeoTestPackagesVersion>1.0.0-preview-gf661f25410</NeoTestPackagesVersion>
+    <NeoTestPackagesVersion>1.0.2-preview-g2604a910bc</NeoTestPackagesVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,21 +19,14 @@
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
     <PackageReference Include="Moq" Version="4.15.2" />
-    <!-- <PackageReference Include="Neo.Assertions" Version="$(NeoTestPackagesVersion)" /> -->
+    <PackageReference Include="Neo.Assertions" Version="$(NeoTestPackagesVersion)" />
     <PackageReference Include="Neo.BuildTasks" Version="$(NeoTestPackagesVersion)" PrivateAssets="All" />
-    <!-- <PackageReference Include="Neo.Test.Harness" Version="$(NeoTestPackagesVersion)" /> -->
+    <PackageReference Include="Neo.Test.Harness" Version="$(NeoTestPackagesVersion)" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\test\src\assertions\assertions.csproj" />
-    <ProjectReference Include="..\..\..\test\src\test-harness\test-harness.csproj" />
-    <!-- <ProjectReference Include="..\..\..\..\official\core\src\neo\neo.csproj" /> -->
-    <!-- <ProjectReference Include="..\..\..\..\official\3neo-monorepo\core\src\neo\neo.csproj" /> -->
   </ItemGroup>
 
 </Project>

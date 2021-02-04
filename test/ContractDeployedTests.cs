@@ -10,7 +10,7 @@ using static DevHawk.RegistrarTests.Common;
 
 namespace DevHawk.RegistrarTests
 {
-    [CheckpointPath("checkpoints/contract-deployed.nxp3-checkpoint")]
+    [CheckpointPath("checkpoints/contract-deployed.neoxp-checkpoint")]
     public class ContractDeployedTests : IClassFixture<CheckpointFixture<ContractDeployedTests>>
     {
         readonly CheckpointFixture fixture;

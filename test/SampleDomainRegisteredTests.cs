@@ -11,7 +11,7 @@ using static DevHawk.RegistrarTests.Common;
 
 namespace DevHawk.RegistrarTests
 {
-    [CheckpointPath("checkpoints/sample-domain-registered.nxp3-checkpoint")]
+    [CheckpointPath("checkpoints/sample-domain-registered.neoxp-checkpoint")]
     public class SampleDomainRegisteredTests : IClassFixture<CheckpointFixture<SampleDomainRegisteredTests>>
     {
         readonly CheckpointFixture fixture;
