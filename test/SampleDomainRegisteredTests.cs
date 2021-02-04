@@ -25,7 +25,7 @@ namespace DevHawk.RegistrarTests
         public void Fail_to_register_existing_domain()
         {
             using var store = fixture.GetCheckpointStore();
-            using var snapshot = new SnapshotView(store);
+            using var snapshot = new SnapshotCache(store);
 
             var storages = snapshot.GetContractStorages<Registrar>();
             storages.TryGetValue(DOMAIN_NAME_BYTES, out var item).Should().BeTrue();
@@ -47,7 +47,7 @@ namespace DevHawk.RegistrarTests
         public void Can_delete_existing_domain()
         {
             using var store = fixture.GetCheckpointStore();
-            using var snapshot = new SnapshotView(store);
+            using var snapshot = new SnapshotCache(store);
 
             var storages = snapshot.GetContractStorages<Registrar>();
             storages.TryGetValue(DOMAIN_NAME_BYTES, out var item).Should().BeTrue();

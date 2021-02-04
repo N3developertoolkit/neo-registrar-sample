@@ -24,7 +24,7 @@ namespace DevHawk.RegistrarTests
         public void Can_register_domain()
         {
             using var store = fixture.GetCheckpointStore();
-            using var snapshot = new SnapshotView(store);
+            using var snapshot = new SnapshotCache(store);
 
             // pretest check to ensure storage is empty as expected
             snapshot.GetContractStorages<Registrar>().Any().Should().BeFalse();
