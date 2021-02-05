@@ -16,7 +16,7 @@ namespace DevHawk.Contracts
     {
         static UInt160 GetDomainOwner(string domain)
         {
-            byte[] value = Storage.Get(Storage.CurrentContext, domain);
+            var value = Storage.Get(Storage.CurrentContext, domain);
             return (value == null) ? UInt160.Zero : (UInt160)value;
         }
 

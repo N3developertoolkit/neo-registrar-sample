@@ -1,6 +1,7 @@
 using System.Linq;
 using FluentAssertions;
 using Neo.Assertions;
+using Neo.BlockchainToolkit.SmartContract;
 using Neo.Persistence;
 using Neo.VM;
 using NeoTestHarness;
@@ -10,7 +11,7 @@ using static DevHawk.RegistrarTests.Common;
 
 namespace DevHawk.RegistrarTests
 {
-    [CheckpointPath("checkpoints/contract-deployed.nxp3-checkpoint")]
+    [CheckpointPath("checkpoints/contract-deployed.neoxp-checkpoint")]
     public class ContractDeployedTests : IClassFixture<CheckpointFixture<ContractDeployedTests>>
     {
         readonly CheckpointFixture fixture;
@@ -24,7 +25,7 @@ namespace DevHawk.RegistrarTests
         public void Can_register_domain()
         {
             using var store = fixture.GetCheckpointStore();
-            using var snapshot = new SnapshotView(store);
+            using var snapshot = new SnapshotCache(store);
 
             // pretest check to ensure storage is empty as expected
             snapshot.GetContractStorages<Registrar>().Any().Should().BeFalse();

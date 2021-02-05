@@ -8,7 +8,7 @@
             "name": "register",
             "type": "neo-contract",
             "request": "launch",
-            "program": "${workspaceFolder}/src/bin/Debug/netstandard2.1/registrar.nef",
+            "program": "${workspaceFolder}/src/bin/Debug/net5.0/registrar.nef",
             "invocation": {
                 "operation": "register",
                 "args": [
@@ -16,18 +16,38 @@
                     "@NhGxW6BtLRhFLqh2oWqeRpNj8aNzKybRoV"
                 ]
             },
+            "return-types": ["bool"],
+        },
+        {
+            "name": "register (fail)",
+            "type": "neo-contract",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/bin/Debug/net5.0/registrar.nef",
+            "invocation": {
+                "operation": "register",
+                "args": [
+                    "sample.domain",
+                    "@NXZQqdnqQKFxQfgMVwmV59yU8tf1P28tEM"
+                ]
+            },
+            "return-types": ["bool"],
+            "checkpoint": "./checkpoints/sample-domain-registered.nxp3-checkpoint",
+            "runtime": {
+                "check-witness": true
+            }
         },
         {
             "name": "delete",
             "type": "neo-contract",
             "request": "launch",
-            "program": "${workspaceFolder}/src/bin/Debug/netstandard2.1/registrar.nef",
+            "program": "${workspaceFolder}/src/bin/Debug/net5.0/registrar.nef",
             "invocation": {
                 "operation": "delete",
                 "args": [
                     "sample.domain"
                 ]
             },
+            "return-types": ["bool"],
             "checkpoint": "./checkpoints/sample-domain-registered.nxp3-checkpoint",
             "runtime": {
                 "check-witness": true
