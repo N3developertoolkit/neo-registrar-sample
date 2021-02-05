@@ -1,6 +1,7 @@
 using System.Linq;
 using FluentAssertions;
 using Neo.Assertions;
+using Neo.BlockchainToolkit.SmartContract;
 using Neo.Persistence;
 using Neo.VM;
 using NeoTestHarness;

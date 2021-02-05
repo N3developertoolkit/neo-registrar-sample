@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <TargetFramework>net5.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <NeoTestPackagesVersion>1.0.2-preview-g2604a910bc</NeoTestPackagesVersion>
+    <NeoTestPackagesVersion>1.0.5-preview</NeoTestPackagesVersion>
   </PropertyGroup>
 
   <ItemGroup>
