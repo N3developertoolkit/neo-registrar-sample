@@ -3,7 +3,7 @@
   "isRoot": true,
   "tools": {
     "neo.express": {
-      "version": "2.0.8-preview",
+      "version": "2.0.15-preview-g30899c7e50",
       "commands": [
         "neoxp"
       ]

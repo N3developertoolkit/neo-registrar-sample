@@ -13,5 +13,9 @@
     <Exec WorkingDirectory="$(TargetDir)" Command="dotnet neon -f $(TargetFileName)"/>
   </Target>
 
-  <Import Project="../neo-express.targets" />
+  <Target Name="NeoExpressBuild" AfterTargets="Build" Inputs="$(MSBuildThisFileDirectory)/bin/Debug/net5.0/registrar.nef" Outputs="$(BaseIntermediateOutputPath)neoxp">
+    <Exec Command="dotnet neoxp batch express.batch --reset" WorkingDirectory="$(MSBuildThisFileDirectory)/.."/>
+    <Touch Files="$(BaseIntermediateOutputPath)neoxp" AlwaysCreate="true" />
+  </Target>
+
 </Project>
