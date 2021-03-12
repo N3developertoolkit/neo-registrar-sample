@@ -24,7 +24,7 @@ namespace DevHawk.RegistrarTests
         public SampleDomainRegisteredTests(CheckpointFixture<SampleDomainRegisteredTests> fixture)
         {
             this.fixture = fixture;
-            this.chain = FILE_SYSTEM.Value.FindChain();
+            this.chain = fixture.FindChain();
         }
 
         [Fact]

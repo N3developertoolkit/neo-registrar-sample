@@ -24,7 +24,7 @@ namespace DevHawk.RegistrarTests
         public ContractDeployedTests(CheckpointFixture<ContractDeployedTests> fixture)
         {
             this.fixture = fixture;
-            this.chain = FILE_SYSTEM.Value.FindChain();
+            this.chain = fixture.FindChain();
         }
 
         [Fact]
