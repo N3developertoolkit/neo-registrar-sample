@@ -39,7 +39,7 @@ namespace DevHawk.Contracts
                 Runtime.Log("Domain already registered");
                 return false;
             }
-            if (!Runtime.CheckWitness(owner)) 
+            if (!Runtime.CheckWitness(owner))
             {
                 Runtime.Log("CheckWitness Failed");
                 return false;

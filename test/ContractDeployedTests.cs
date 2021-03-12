@@ -44,8 +44,9 @@ namespace DevHawk.RegistrarTests
             using var engine = new TestApplicationEngine(snapshot, settings, alice);
 
             var logs = new List<string>();
-            engine.Log += (sender, args) => { 
-                logs.Add(args.Message); 
+            engine.Log += (sender, args) =>
+            {
+                logs.Add(args.Message);
             };
 
             engine.ExecuteScript<Registrar>(c => c.register(DOMAIN_NAME, alice));
