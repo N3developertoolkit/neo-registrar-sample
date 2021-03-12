@@ -1,9 +1,13 @@
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Neo.Assertions;
+using Neo.BlockchainToolkit;
+using Neo.BlockchainToolkit.Models;
 using Neo.BlockchainToolkit.SmartContract;
 using Neo.Persistence;
 using Neo.VM;
+using Neo.Wallets;
 using NeoTestHarness;
 using Xunit;
 
@@ -15,15 +19,20 @@ namespace DevHawk.RegistrarTests
     public class ContractDeployedTests : IClassFixture<CheckpointFixture<ContractDeployedTests>>
     {
         readonly CheckpointFixture fixture;
+        readonly ExpressChain chain;
 
         public ContractDeployedTests(CheckpointFixture<ContractDeployedTests> fixture)
         {
             this.fixture = fixture;
+            this.chain = FILE_SYSTEM.Value.FindChain();
         }
 
         [Fact]
         public void Can_register_domain()
         {
+            var settings = chain.GetProtocolSettings();
+            var alice = chain.GetDefaultAccount("alice").ToScriptHash(settings.AddressVersion);
+
             using var store = fixture.GetCheckpointStore();
             using var snapshot = new SnapshotCache(store);
 
@@ -32,8 +41,14 @@ namespace DevHawk.RegistrarTests
 
             // ExecuteScript converts the provided expression(s) into a Neo script
             // loads them into the engine and executes it 
-            using var engine = new TestApplicationEngine(snapshot, ALICE);
-            engine.ExecuteScript<Registrar>(c => c.register(DOMAIN_NAME, ALICE));
+            using var engine = new TestApplicationEngine(snapshot, settings, alice);
+
+            var logs = new List<string>();
+            engine.Log += (sender, args) => { 
+                logs.Add(args.Message); 
+            };
+
+            engine.ExecuteScript<Registrar>(c => c.register(DOMAIN_NAME, alice));
 
             engine.State.Should().Be(VMState.HALT);
             engine.ResultStack.Should().HaveCount(1);
@@ -42,7 +57,7 @@ namespace DevHawk.RegistrarTests
             // ensure correct storage item was created 
             var storages = snapshot.GetContractStorages<Registrar>();
             storages.TryGetValue(DOMAIN_NAME_BYTES, out var item).Should().BeTrue();
-            item!.Should().Be(ALICE);
+            item!.Should().Be(alice);
         }
     }
 }

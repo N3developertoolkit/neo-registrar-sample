@@ -1,5 +1,5 @@
-using Neo;
-using NeoTestHarness;
+using System;
+using System.IO.Abstractions;
 
 namespace DevHawk.RegistrarTests
 {
@@ -7,8 +7,7 @@ namespace DevHawk.RegistrarTests
     {
         public const string DOMAIN_NAME = "sample.domain";
         public readonly static byte[] DOMAIN_NAME_BYTES = Neo.Utility.StrictUTF8.GetBytes(DOMAIN_NAME);
-        public readonly static UInt160 BOB = "NXZQqdnqQKFxQfgMVwmV59yU8tf1P28tEM".FromAddress();
-        public readonly static UInt160 ALICE = "NhGxW6BtLRhFLqh2oWqeRpNj8aNzKybRoV".FromAddress();
+        public readonly static Lazy<IFileSystem> FILE_SYSTEM = new Lazy<IFileSystem>(() => new FileSystem());
     }
 }
 
