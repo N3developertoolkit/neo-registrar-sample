@@ -34,9 +34,8 @@ namespace DevHawk.RegistrarTests
             var alice = chain.GetDefaultAccount("alice").ToScriptHash(settings.AddressVersion);
             var bob = chain.GetDefaultAccount("bob").ToScriptHash(settings.AddressVersion);
 
-            using var store = fixture.GetCheckpointStore();
-            using var snapshot = new SnapshotCache(store);
-
+            using var snapshot = fixture.GetSnapshot();
+ 
             var storages = snapshot.GetContractStorages<Registrar>();
             storages.TryGetValue(DOMAIN_NAME_BYTES, out var item).Should().BeTrue();
             item!.Should().Be(bob);
@@ -59,8 +58,7 @@ namespace DevHawk.RegistrarTests
             var settings = chain.GetProtocolSettings();
             var bob = chain.GetDefaultAccount("bob").ToScriptHash(settings.AddressVersion);
 
-            using var store = fixture.GetCheckpointStore();
-            using var snapshot = new SnapshotCache(store);
+            using var snapshot = fixture.GetSnapshot();
 
             var storages = snapshot.GetContractStorages<Registrar>();
             storages.TryGetValue(DOMAIN_NAME_BYTES, out var item).Should().BeTrue();

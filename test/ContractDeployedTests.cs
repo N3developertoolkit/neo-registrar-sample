@@ -33,8 +33,7 @@ namespace DevHawk.RegistrarTests
             var settings = chain.GetProtocolSettings();
             var alice = chain.GetDefaultAccount("alice").ToScriptHash(settings.AddressVersion);
 
-            using var store = fixture.GetCheckpointStore();
-            using var snapshot = new SnapshotCache(store);
+            using var snapshot = fixture.GetSnapshot();
 
             // pretest check to ensure storage is empty as expected
             snapshot.GetContractStorages<Registrar>().Any().Should().BeFalse();
