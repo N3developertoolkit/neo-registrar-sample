@@ -9,11 +9,12 @@
             "type": "neo-contract",
             "request": "launch",
             "program": "${workspaceFolder}/src/bin/Debug/net5.0/registrar.nef",
+            "neo-express": "${workspaceFolder}/default.neo-express",
             "invocation": {
                 "operation": "register",
                 "args": [
                     "sample.domain",
-                    "@NhGxW6BtLRhFLqh2oWqeRpNj8aNzKybRoV"
+                    "@bob"
                 ]
             },
             "return-types": ["bool"],
@@ -23,24 +24,23 @@
             "type": "neo-contract",
             "request": "launch",
             "program": "${workspaceFolder}/src/bin/Debug/net5.0/registrar.nef",
+            "neo-express": "${workspaceFolder}/default.neo-express",
             "invocation": {
                 "operation": "register",
                 "args": [
                     "sample.domain",
-                    "@NXZQqdnqQKFxQfgMVwmV59yU8tf1P28tEM"
+                    "@alice"
                 ]
             },
             "return-types": ["bool"],
             "checkpoint": "./checkpoints/sample-domain-registered.neoxp-checkpoint",
-            "runtime": {
-                "check-witness": true
-            }
         },
         {
             "name": "delete",
             "type": "neo-contract",
             "request": "launch",
             "program": "${workspaceFolder}/src/bin/Debug/net5.0/registrar.nef",
+            "neo-express": "${workspaceFolder}/default.neo-express",
             "invocation": {
                 "operation": "delete",
                 "args": [
@@ -49,9 +49,7 @@
             },
             "return-types": ["bool"],
             "checkpoint": "./checkpoints/sample-domain-registered.neoxp-checkpoint",
-            "runtime": {
-                "check-witness": true
-            }
+            "signers": ["bob"]
         }
     ]
 }
