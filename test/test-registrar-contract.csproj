@@ -2,14 +2,15 @@
 
   <PropertyGroup>
     <LangVersion>9</LangVersion>
-    <Nullable>enable</Nullable>
-    <TargetFramework>net5.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <NeoTestPackagesVersion>1.0.17-preview</NeoTestPackagesVersion>
+    <NeoTestPackagesVersion>1.0.19-preview</NeoTestPackagesVersion>
+    <Nullable>enable</Nullable>
+    <RootNamespace>DevHawk.RegistrarTests</RootNamespace>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ContractUnderTest Include="..\src\registrar.csproj" />
+    <ContractUnderTest Include="..\src\registrar.csproj" RootNamespace="$(RootNamespace)" />
   </ItemGroup>
 
   <ItemGroup>
