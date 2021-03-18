@@ -410,4 +410,5 @@ $RECYCLE.BIN/
 
 !.vscode/extensions.json
 *.neo-trace
+!trace-files/*.neo-trace
 /checkpoints/*.neoxp-checkpoint
