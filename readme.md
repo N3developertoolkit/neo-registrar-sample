@@ -1,7 +1,7 @@
-# Registrar Neo 3 Smart Contract Sample
+# Neo N3 Domain Registrar Smart Contract Sample
 
 This repo contains the [Domain Smart Contract sample](https://github.com/neo-project/examples/tree/0ab03a0ed5e1e331b756d9ad51b01657385470c7/csharp/Domain)
-updated for Neo 3 RC1 and with additional assets that can be used with the Neo 3 RC1 version of the
+updated for Neo N3 RC1 and with additional assets that can be used with the Neo 3 RC1 version of the
 [Neo Blockchain Toolkit](https://marketplace.visualstudio.com/items?itemName=ngd-seattle.neo-blockchain-toolkit).
 
 ## Prerequisites
