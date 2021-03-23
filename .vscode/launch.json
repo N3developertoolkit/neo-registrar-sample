@@ -8,6 +8,7 @@
             "name": "register",
             "type": "neo-contract",
             "request": "launch",
+            "preLaunchTask": "build",
             "program": "${workspaceFolder}/src/bin/Debug/net5.0/registrar.nef",
             "neo-express": "${workspaceFolder}/default.neo-express",
             "invocation": {
@@ -23,6 +24,7 @@
             "name": "register (fail)",
             "type": "neo-contract",
             "request": "launch",
+            "preLaunchTask": "build",
             "program": "${workspaceFolder}/src/bin/Debug/net5.0/registrar.nef",
             "neo-express": "${workspaceFolder}/default.neo-express",
             "invocation": {
@@ -39,6 +41,7 @@
             "name": "register (trace)",
             "type": "neo-contract",
             "request": "launch",
+            "preLaunchTask": "build",
             "program": "${workspaceFolder}/src/bin/Debug/net5.0/registrar.nef",
             "neo-express": "${workspaceFolder}/default.neo-express",
             "invocation": {
@@ -50,6 +53,7 @@
             "name": "delete",
             "type": "neo-contract",
             "request": "launch",
+            "preLaunchTask": "build",
             "program": "${workspaceFolder}/src/bin/Debug/net5.0/registrar.nef",
             "neo-express": "${workspaceFolder}/default.neo-express",
             "invocation": {
