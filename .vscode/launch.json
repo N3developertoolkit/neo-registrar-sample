@@ -5,66 +5,21 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "register",
-            "type": "neo-contract",
+            "name": ".NET Core Launch (console)",
+            "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/bin/Debug/net5.0/registrar.nef",
-            "neo-express": "${workspaceFolder}/default.neo-express",
-            "invocation": {
-                "operation": "register",
-                "args": [
-                    "sample.domain",
-                    "@bob"
-                ]
-            },
-            "return-types": ["bool"],
+            "program": "${workspaceFolder}/client/cli/bin/Debug/net5.0/cli-client.dll",
+            "args": ["transfer", "devhawk", "WNXC46BxZaUHthAfPHHYiRNymnxygo7qHh", "./sam.wallet.json"],
+            "cwd": "${workspaceFolder}/client/cli",
+            "console": "internalConsole",
+            "stopAtEntry": false
         },
         {
-            "name": "register (fail)",
-            "type": "neo-contract",
-            "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/bin/Debug/net5.0/registrar.nef",
-            "neo-express": "${workspaceFolder}/default.neo-express",
-            "invocation": {
-                "operation": "register",
-                "args": [
-                    "sample.domain",
-                    "@alice"
-                ]
-            },
-            "return-types": ["bool"],
-            "checkpoint": "./checkpoints/sample-domain-registered.neoxp-checkpoint",
-        },
-        {
-            "name": "register (trace)",
-            "type": "neo-contract",
-            "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/bin/Debug/net5.0/registrar.nef",
-            "neo-express": "${workspaceFolder}/default.neo-express",
-            "invocation": {
-                "trace-file": "${workspaceFolder}/trace-files/0x183c689478046f158909505a2b449c7e98f2e398e4467508cc4a955bea05f02d.neo-trace"
-            },
-            "return-types": ["bool"],
-        },
-        {
-            "name": "delete",
-            "type": "neo-contract",
-            "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/bin/Debug/net5.0/registrar.nef",
-            "neo-express": "${workspaceFolder}/default.neo-express",
-            "invocation": {
-                "operation": "delete",
-                "args": [
-                    "sample.domain"
-                ]
-            },
-            "return-types": ["bool"],
-            "checkpoint": "./checkpoints/sample-domain-registered.neoxp-checkpoint",
-            "signers": ["bob"]
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
         }
     ]
 }
