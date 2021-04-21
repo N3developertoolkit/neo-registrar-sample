@@ -5,13 +5,32 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "cli-client: register",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/client/cli/bin/Debug/net5.0/cli-client.dll",
+            "args": [
+                "register",
+                "unregistered.domain",
+                "Nc5f5k26eZQTSdARghwGswfBWjva5MwmLb",
+                "-k",
+                "f5e2928a05f90b5c18534f1aaa1b71cd5b9daf9594082b197f18f348d8e07449"
+            ],
+            "cwd": "${workspaceFolder}/client/cli",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
             "name": "cli-client: query",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/client/cli/bin/Debug/net5.0/cli-client.dll",
-            "args": ["query", "sample.domain"],
-            // "args": ["register", "sample.domain", "Nc5f5k26eZQTSdARghwGswfBWjva5MwmLb"],
+            "args": [
+                "query",
+                "unregistered.domain"
+            ],
             "cwd": "${workspaceFolder}/client/cli",
             "console": "internalConsole",
             "stopAtEntry": false
@@ -30,7 +49,9 @@
                     "@bob"
                 ]
             },
-            "return-types": ["bool"],
+            "return-types": [
+                "bool"
+            ],
         },
         {
             "name": "register (fail)",
@@ -46,7 +67,9 @@
                     "@alice"
                 ]
             },
-            "return-types": ["bool"],
+            "return-types": [
+                "bool"
+            ],
             "checkpoint": "./checkpoints/sample-domain-registered.neoxp-checkpoint",
         },
         {
@@ -59,7 +82,9 @@
             "invocation": {
                 "trace-file": "${workspaceFolder}/trace-files/0x183c689478046f158909505a2b449c7e98f2e398e4467508cc4a955bea05f02d.neo-trace"
             },
-            "return-types": ["bool"],
+            "return-types": [
+                "bool"
+            ],
         },
         {
             "name": "delete",
@@ -74,9 +99,13 @@
                     "sample.domain"
                 ]
             },
-            "return-types": ["bool"],
+            "return-types": [
+                "bool"
+            ],
             "checkpoint": "./checkpoints/sample-domain-registered.neoxp-checkpoint",
-            "signers": ["bob"]
+            "signers": [
+                "bob"
+            ]
         }
     ]
 }
