@@ -6,6 +6,9 @@ using System.IO;
 using System.Threading.Tasks;
 using Neo;
 using Neo.Network.RPC;
+using Neo.SmartContract;
+using Neo.VM;
+using Neo.Wallets;
 using NEP6Wallet = Neo.Wallets.NEP6.NEP6Wallet;
 
 namespace DevHawk.Registrar.Cli
@@ -19,11 +22,18 @@ namespace DevHawk.Registrar.Cli
         bool transfer(string domain, Neo.UInt160 to);
     }
 
+    class Options
+    {
+        public FileInfo? WalletPath { get; set; }
+        public string? PrivateKey { get; set; }
+    }
+
     class Program
     {
         const uint Magic = 112694212;
         const byte AddressVersion = 53;
         const ushort RpcPort = 50012;
+        readonly static UInt160 RegistrarContractHash = UInt160.Parse("0xdfa2d9762736cd6edb09c066db646d967e09abbb");
 
         static ProtocolSettings ProtocolSettings => ProtocolSettings.Default with
         {
@@ -37,57 +47,114 @@ namespace DevHawk.Registrar.Cli
 
         static async Task Main(string[] args)
         {
-            var queryCmd = new Command(nameof(Registrar.query))
+            var queryCmd = new Command("query")
             {
                 new Argument<string>("domain"),
             };
-            queryCmd.Handler = CommandHandler.Create<string>(Query);
+            queryCmd.Handler = CommandHandler.Create<string>(QueryAsync);
 
-            var registerCmd = new Command(nameof(Registrar.register))
+            var registerCmd = new Command("register")
             {
                 new Argument<string>("domain"),
-                new Argument<FileInfo>("walletPath"),
+                new Argument<string>("owner"),
+                new Option<FileInfo>(new[] { "-w", "--wallet-path" }, "Path to wallet file used to sign transaction"),
+                new Option<string>(new[] { "-k", "--private-key" }, "Private key used to sign transaction"),
             };
-            registerCmd.Handler = CommandHandler.Create<string, FileInfo>(Register);
 
-            var transferCmd = new Command(nameof(Registrar.transfer))
-            {
-                new Argument<string>("domain"),
-                new Argument<string>("toAddress"),
-                new Argument<FileInfo>("walletPath"),
-            };
-            transferCmd.Handler = CommandHandler.Create<string, string, FileInfo>(Transfer);
+            registerCmd.Handler = CommandHandler.Create<string, string, Options>(RegisterAsync);
 
-            var deleteCmd = new Command(nameof(Registrar.delete))
-            {
-                new Argument<string>("domain"),
-                new Argument<FileInfo>("walletPath"),
-            };
-            deleteCmd.Handler = CommandHandler.Create<string, FileInfo>(Delete);
+            // var transferCmd = new Command(nameof(Registrar.transfer))
+            // {
+            //     new Argument<string>("domain"),
+            //     new Argument<string>("toAddress"),
+            //     new Argument<FileInfo>("walletPath"),
+            // };
+            // transferCmd.Handler = CommandHandler.Create<string, string, FileInfo>(Transfer);
+
+            // var deleteCmd = new Command(nameof(Registrar.delete))
+            // {
+            //     new Argument<string>("domain"),
+            //     new Argument<FileInfo>("walletPath"),
+            // };
+            // deleteCmd.Handler = CommandHandler.Create<string, FileInfo>(Delete);
 
             var rootCmd = new RootCommand()
             {
-                queryCmd, registerCmd, transferCmd, deleteCmd
+                queryCmd, 
+                registerCmd, 
+                // transferCmd, 
+                // deleteCmd
             };
 
             await rootCmd.InvokeAsync(args).ConfigureAwait(false);
         }
 
-        static async Task<int> Query(string domain)
+        static async Task<int> HandleErrors(Func<Task> func)
         {
-            await Console.Out.WriteLineAsync($"query {domain}");
+            try
+            {
+                await func();
+            }
+            catch (Exception ex)
+            {
+                using var _ = ConsoleColorManager.SetColor(ConsoleColor.Red);
+                Console.WriteLine(ex.Message);
+                return 1;
+            }
             return 0;
         }
 
-        static async Task<int> Register(string domain, FileInfo walletPath)
+        static Task<int> QueryAsync(string domain)
         {
-            await Console.Out.WriteLineAsync($"register {domain} {walletPath.FullName}");
-            return 0;
+            return HandleErrors(async () =>
+            {
+                var domainParam = new ContractParameter(ContractParameterType.String) { Value = domain };
+                using var builder = new ScriptBuilder();
+                builder.EmitDynamicCall(RegistrarContractHash, "query", domainParam);
+
+                var rpcClient = BuildRpcClient();
+                var result = await rpcClient.InvokeScriptAsync(builder.ToArray());
+
+                if (!string.IsNullOrEmpty(result.Exception))
+                {
+                    throw new Exception(result.Exception);
+                }
+
+                if (result.Stack.Length != 1)
+                {
+                    throw new Exception($"Unexpected result stack length {result.Stack.Length}");
+                }
+
+                if (result.Stack[0].Type != Neo.VM.Types.StackItemType.ByteString)
+                {
+                    throw new Exception($"Unexpected result stack type {result.Stack[0].Type}");
+                }
+
+                var ownerScriptHash = new UInt160(result.Stack[0].GetSpan());
+
+                await Console.Out.WriteLineAsync($"query: {domain} owned by {ownerScriptHash.ToAddress(AddressVersion)}");
+            });
+        }
+
+        static Task<int> RegisterAsync(string domain, string owner, Options options)
+        {
+            return HandleErrors(async () =>
+            {
+                if (!TryFromAddress(owner, AddressVersion, out var ownerAccount))
+                {
+                    throw new Exception($"Invalid address ({owner}) specified for owner");
+                }
+
+
+
+
+                await Console.Out.WriteLineAsync($"register {domain} {ownerAccount}");
+            });
         }
 
         static async Task<int> Transfer(string domain, string toAddress, FileInfo walletPath)
         {
-            if (TryToScriptHash(toAddress, AddressVersion, out var scriptHash))
+            if (TryFromAddress(toAddress, AddressVersion, out var scriptHash))
             {
                 await Console.Out.WriteLineAsync($"transfer {domain} {scriptHash}");
                 return 0;
@@ -158,7 +225,7 @@ namespace DevHawk.Registrar.Cli
             return sb.ToString();
         }
 
-        static bool TryToScriptHash(string address, byte version, [MaybeNullWhen(false)] out UInt160 scriptHash)
+        static bool TryFromAddress(string address, byte version, [MaybeNullWhen(false)] out UInt160 scriptHash)
         {
             try
             {
@@ -170,5 +237,7 @@ namespace DevHawk.Registrar.Cli
             scriptHash = default;
             return false;
         }
+
+
     }
 }
