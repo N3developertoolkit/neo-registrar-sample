@@ -62,7 +62,7 @@ namespace DevHawk.Registrar.Cli
                 builder.EmitDynamicCall(RegistrarContractHash, "query", domainParam);
 
                 var rpcClient = new RpcClient(new Uri($"http://localhost:{RpcPort}"), protocolSettings: ProtocolSettings);
-                var result = await rpcClient.InvokeScriptAsync(builder.ToArray());
+                var result = await rpcClient.InvokeScriptAsync(builder.ToArray()).ConfigureAwait(false);
 
                 if (!string.IsNullOrEmpty(result.Exception))
                 {
@@ -75,7 +75,7 @@ namespace DevHawk.Registrar.Cli
                 }
 
                 var ownerScriptHash = ToUInt160(result.Stack[0]);
-                await Console.Out.WriteLineAsync($"query: {domain} owned by {ownerScriptHash.ToAddress(AddressVersion)}");
+                await Console.Out.WriteLineAsync($"query: {domain} owned by {ownerScriptHash.ToAddress(AddressVersion)}").ConfigureAwait(false);
             });
         }
 
@@ -99,10 +99,10 @@ namespace DevHawk.Registrar.Cli
                 var signers = new[] { new Signer { Account = ownerAccount, Scopes = WitnessScope.CalledByEntry } };
                 var tm = await factory.MakeTransactionAsync(builder.ToArray(), signers).ConfigureAwait(false);
                 tm.AddSignature(keyPair);
-                var tx = await tm.SignAsync();
-                var txHash = await rpcClient.SendRawTransactionAsync(tx);
+                var tx = await tm.SignAsync().ConfigureAwait(false);
+                var txHash = await rpcClient.SendRawTransactionAsync(tx).ConfigureAwait(false);
 
-                await Console.Out.WriteLineAsync($"register: {domain} to {owner} (tx hash: {txHash})");
+                await Console.Out.WriteLineAsync($"register: {domain} to {owner} (tx hash: {txHash})").ConfigureAwait(false);
             });
         }
 
@@ -123,15 +123,20 @@ namespace DevHawk.Registrar.Cli
 
         static async Task<int> HandleErrors(Func<Task> func)
         {
+            var originalForegroundColor = Console.ForegroundColor;
             try
             {
-                await func();
+                await func().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                using var _ = ConsoleColorManager.SetColor(ConsoleColor.Red);
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(ex.Message);
                 return 1;
+            }
+            finally
+            {
+                Console.ForegroundColor = originalForegroundColor;
             }
             return 0;
         }
