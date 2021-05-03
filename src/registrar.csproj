@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <NeoExpressBatch>..\express.batch</NeoExpressBatch>
+    <Nullable>enable</Nullable>
     <TargetFramework>net5.0</TargetFramework>
     <TargetNeoContractName>DevHawk.Registrar</TargetNeoContractName>
   </PropertyGroup>
