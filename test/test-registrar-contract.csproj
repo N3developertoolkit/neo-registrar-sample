@@ -2,7 +2,7 @@
   <PropertyGroup>
     <LangVersion>9</LangVersion>
     <IsPackable>false</IsPackable>
-    <NeoTestPackagesVersion>1.0.24-preview</NeoTestPackagesVersion>
+    <NeoTestPackagesVersion>1.0.25-preview</NeoTestPackagesVersion>
     <Nullable>enable</Nullable>
     <RootNamespace>DevHawk.RegistrarTests</RootNamespace>
     <TargetFramework>net5.0</TargetFramework>
@@ -28,33 +28,4 @@
   <ItemGroup>
     <NeoContractReference Include="..\src\registrar.csproj" />
   </ItemGroup>
-
-  <!-- TODO: Move the following target into a shared MSBuild file -->
-  <Target Name="GenerateContractInterface" BeforeTargets="ResolveProjectReferences" Condition="'@(NeoContractReference->Count())' &gt; 0">
-    <ItemGroup>
-      <ProjectReference Include="@(NeoContractReference)">
-        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      </ProjectReference>
-    </ItemGroup>
-
-    <MSBuild Projects="@(NeoContractReference)" Targets="GetTargetNeoContract">
-      <Output TaskParameter="TargetOutputs" ItemName="TargetNeoContract" />
-    </MSBuild>
-
-    <ItemGroup>
-      <NeoContractManifest Include="@(TargetNeoContract->Metadata('ManifestPath'))" >
-        <OutputFile>$(IntermediateOutputPath)@(TargetNeoContract->Metadata('Name')).contract-interface.cs</OutputFile>
-      </NeoContractManifest>
-    </ItemGroup>
-
-    <NeoContractInterface
-      ManifestFile="@(NeoContractManifest)"
-      OutputFile="@(NeoContractManifest->Metadata('OutputFile'))"
-      RootNamespace="$(RootNamespace)"/>
-
-    <ItemGroup>
-      <Compile Include="@(NeoContractManifest->Metadata('OutputFile'))" />
-    </ItemGroup>
-
-  </Target>
 </Project>
