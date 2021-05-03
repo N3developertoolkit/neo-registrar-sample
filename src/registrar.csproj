@@ -1,18 +1,45 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+
+    <TargetContractName>DevHawk.Registrar</TargetContractName>
+    <NeoExpressBatch>..\express.batch</NeoExpressBatch>
+
+    <!-- TODO: Move the following properties into a shared MSBuild file -->
+    <NeoContractExt>.nef</NeoContractExt>
+    <NeoManifestExt>.manifest.json</NeoManifestExt>
+    <NeoDebugInfoExt>.nefdbgnfo</NeoDebugInfoExt>
+
+    <NccsOutputPath>bin\sc\</NccsOutputPath>
+    <NccsDebugArguments Condition="'$(Configuration)'=='Debug'">--debug --no-optimize</NccsDebugArguments>
+
+    <TargetNccsOutputPath Condition="'$(NccsOutputPath)' != ''">$([MSBuild]::NormalizeDirectory('$(MSBuildProjectDirectory)', '$(NccsOutputPath)'))</TargetNccsOutputPath>
+    <TargetNeoContractFileName Condition="'$(TargetContractName)' != ''">$(TargetContractName)$(NeoContractExt)</TargetNeoContractFileName>
+    <TargetNeoContractPath Condition="'$(TargetNeoContractFileName)' != ''">$(TargetNccsOutputPath)$(TargetNeoContractFileName)</TargetNeoContractPath>
+    <TargetNeoManifestFileName Condition="'$(TargetContractName)' != ''">$(TargetContractName)$(NeoManifestExt)</TargetNeoManifestFileName>
+    <TargetNeoManifestPath Condition="'$(TargetNeoManifestFileName)' != ''">$(TargetNccsOutputPath)$(TargetNeoManifestFileName)</TargetNeoManifestPath>
+    <TargetNeoDebugInfoFileName Condition="'$(TargetContractName)' != ''">$(TargetContractName)$(NeoDebugInfoExt)</TargetNeoDebugInfoFileName>
+    <TargetNeoDebugInfoPath Condition="'$(TargetNeoDebugInfoFileName)' != ''">$(TargetNccsOutputPath)$(TargetNeoDebugInfoFileName)</TargetNeoDebugInfoPath>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Neo.SmartContract.Framework" Version="3.0.0-rc2" />
   </ItemGroup>
 
-  <Target Name="NccsBuild" AfterTargets="Build" Inputs="$(MSBuildThisFile)" Outputs="$(MSBuildThisFileDirectory)/bin/sc/$(TargetName).nef;$(MSBuildThisFileDirectory)/bin/sc/$(TargetName).nefdbgnfo;$(MSBuildThisFileDirectory)/bin/sc/$(TargetName).manifest.json;">
-    <Exec WorkingDirectory="$(MSBuildThisFileDirectory)" Command="dotnet nccs --debug --no-optimize $(MSBuildThisFile)" />
+  <!-- TODO: Move the following targets into a shared MSBuild file -->
+  <Target Name="NccsBuild" AfterTargets="Build" Inputs="$(MSBuildThisFile);@(Compile);" Outputs="$(TargetNeoContractPath);$(TargetNeoManifestPath);">
+    <Exec WorkingDirectory="$(projectDir)" Command="dotnet nccs $(NccsDebugArguments) $(MSBuildProjectFullPath)" />
   </Target>
 
-  <Target Name="NeoExpressBuild" AfterTargets="Build" Inputs="$(MSBuildThisFileDirectory)/bin/sc/$(TargetName).nef" Outputs="$(BaseIntermediateOutputPath)neoxp">
-    <Exec Command="dotnet neoxp batch express.batch --reset" WorkingDirectory="$(MSBuildThisFileDirectory)/.." />
-    <Touch Files="$(BaseIntermediateOutputPath)neoxp" AlwaysCreate="true" />
+  <Target Name="RunNeoExpressBatch" AfterTargets="Build" Inputs="$(TargetNeoContractPath);$(NeoExpressBatch)" Outputs="$(IntermediateOutputPath)neoxp">
+    <PropertyGroup>
+      <_NeoExpressFilePath Condition="'$(NeoExpressFile)' != ''">$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(NeoExpressFile)'))</_NeoExpressFilePath>
+      <_NeoExpressParameter Condition="'$(_NeoExpressFilePath)' != ''">--input $(_NeoExpressFilePath)</_NeoExpressParameter>
+      <_NeoExpressBatchFilePath Condition="'$(NeoExpressBatch)' != ''">$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(NeoExpressBatch)'))</_NeoExpressBatchFilePath>
+      <_NeoExpressBatchFileDirectory Condition="'$(_NeoExpressBatchFilePath)' != ''">$([System.IO.Path]::GetDirectoryName('$(_NeoExpressBatchFilePath)'))</_NeoExpressBatchFileDirectory>
+    </PropertyGroup>
+
+    <Exec Command="dotnet neoxp batch $(_NeoExpressBatchFilePath) --reset $(_NeoExpressParameter)" WorkingDirectory="$(_NeoExpressBatchFileDirectory)" />
+    <Touch Files="$(IntermediateOutputPath)neoxp" AlwaysCreate="true" />
   </Target>
 </Project>

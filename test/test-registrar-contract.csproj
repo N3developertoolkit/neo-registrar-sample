@@ -29,6 +29,12 @@
     <Compile Include="$(IntermediateOutputPath)/DevHawk.Registrar.contract-interface.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\src\registrar.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+
   <Target Name="GenerateContractInterface" BeforeTargets="ResolveProjectReferences" Inputs="$(MSBuildThisFileDirectory)/../src/bin/sc/DevHawk.Registrar.manifest.json" Outputs="$(IntermediateOutputPath)/DevHawk.Registrar.contract-interface.cs">
     <NeoContractInterface ManifestFile="$(MSBuildThisFileDirectory)/../src/bin/sc/DevHawk.Registrar.manifest.json" OutputFile="$(IntermediateOutputPath)/DevHawk.Registrar.contract-interface.cs" RootNamespace="$(RootNamespace)" />
   </Target>
