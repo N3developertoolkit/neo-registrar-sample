@@ -1,17 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <LangVersion>9</LangVersion>
     <IsPackable>false</IsPackable>
-    <NeoTestPackagesVersion>1.0.19-preview</NeoTestPackagesVersion>
+    <NeoTestPackagesVersion>1.0.24-preview</NeoTestPackagesVersion>
     <Nullable>enable</Nullable>
     <RootNamespace>DevHawk.RegistrarTests</RootNamespace>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ContractUnderTest Include="..\src\registrar.csproj" RootNamespace="$(RootNamespace)" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="3.0.3">
@@ -30,4 +25,11 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="$(IntermediateOutputPath)/DevHawk.Registrar.contract-interface.cs" />
+  </ItemGroup>
+
+  <Target Name="GenerateContractInterface" BeforeTargets="ResolveProjectReferences" Inputs="$(MSBuildThisFileDirectory)/../src/bin/sc/DevHawk.Registrar.manifest.json" Outputs="$(IntermediateOutputPath)/DevHawk.Registrar.contract-interface.cs">
+    <NeoContractInterface ManifestFile="$(MSBuildThisFileDirectory)/../src/bin/sc/DevHawk.Registrar.manifest.json" OutputFile="$(IntermediateOutputPath)/DevHawk.Registrar.contract-interface.cs" RootNamespace="$(RootNamespace)" />
+  </Target>
 </Project>

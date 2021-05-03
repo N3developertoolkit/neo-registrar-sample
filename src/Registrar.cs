@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using Neo;
 using Neo.SmartContract.Framework;
-using Neo.SmartContract.Framework.Services.Neo;
+using Neo.SmartContract.Framework.Services;
 
 namespace DevHawk.Contracts
 {
@@ -17,7 +17,7 @@ namespace DevHawk.Contracts
             return (value == null) ? UInt160.Zero : (UInt160)value;
         }
 
-        public static UInt160 Query(string domain)
+        public UInt160 Query(string domain)
         {
             var currentOwner = GetDomainOwner(domain);
             if (currentOwner.IsZero)
@@ -28,7 +28,7 @@ namespace DevHawk.Contracts
             return currentOwner;
         }
 
-        public static bool Register(string domain, UInt160 owner)
+        public bool Register(string domain, UInt160 owner)
         {
             var currentOwner = GetDomainOwner(domain);
             if (!currentOwner.IsZero)
@@ -46,7 +46,7 @@ namespace DevHawk.Contracts
             return true;
         }
 
-        public static bool Transfer(string domain, UInt160 to)
+        public bool Transfer(string domain, UInt160 to)
         {
             var currentOwner = GetDomainOwner(domain);
             if (currentOwner.IsZero)
@@ -69,7 +69,7 @@ namespace DevHawk.Contracts
             return true;
         }
 
-        public static bool Delete(string domain)
+        public bool Delete(string domain)
         {
             var currentOwner = GetDomainOwner(domain);
             if (currentOwner.IsZero)

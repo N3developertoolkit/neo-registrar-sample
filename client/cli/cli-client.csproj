@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
@@ -7,10 +6,8 @@
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>DevHawk.Registrar.Cli</RootNamespace>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Neo.Network.RPC.RpcClient" Version="3.0.0-rc1" />
-    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20574.7" />
+    <PackageReference Include="Neo.Network.RPC.RpcClient" Version="3.0.0-mono-master-00829" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.21216.1" />
   </ItemGroup>
-
 </Project>

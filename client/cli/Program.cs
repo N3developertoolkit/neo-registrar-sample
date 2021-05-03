@@ -14,14 +14,14 @@ namespace DevHawk.Registrar.Cli
 {
     class Program
     {
-        const uint Magic = 112694212;
+        const uint Network = 112694212;
         const byte AddressVersion = 53;
         const ushort RpcPort = 50012;
         readonly static UInt160 RegistrarContractHash = UInt160.Parse("0xdfa2d9762736cd6edb09c066db646d967e09abbb");
 
         static ProtocolSettings ProtocolSettings => ProtocolSettings.Default with
         {
-            Magic = Magic,
+            Network = Network,
             AddressVersion = AddressVersion,
         };
 

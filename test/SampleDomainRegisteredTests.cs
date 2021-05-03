@@ -4,7 +4,6 @@ using Neo.Assertions;
 using Neo.BlockchainToolkit;
 using Neo.BlockchainToolkit.Models;
 using Neo.BlockchainToolkit.SmartContract;
-using Neo.Persistence;
 using Neo.SmartContract;
 using Neo.VM;
 using NeoTestHarness;
