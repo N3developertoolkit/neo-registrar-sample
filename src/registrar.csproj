@@ -11,7 +11,6 @@
     <NeoDebugInfoExt>.nefdbgnfo</NeoDebugInfoExt>
 
     <NccsOutputPath>bin\sc\</NccsOutputPath>
-    <NccsDebugArguments Condition="'$(Configuration)'=='Debug'">--debug --no-optimize</NccsDebugArguments>
 
     <TargetNccsOutputPath Condition="'$(NccsOutputPath)' != ''">$([MSBuild]::NormalizeDirectory('$(MSBuildProjectDirectory)', '$(NccsOutputPath)'))</TargetNccsOutputPath>
     <TargetNeoContractFileName Condition="'$(TargetContractName)' != ''">$(TargetContractName)$(NeoContractExt)</TargetNeoContractFileName>
@@ -28,7 +27,11 @@
 
   <!-- TODO: Move the following targets into a shared MSBuild file -->
   <Target Name="NccsBuild" AfterTargets="Build" Inputs="$(MSBuildThisFile);@(Compile);" Outputs="$(TargetNeoContractPath);$(TargetNeoManifestPath);">
-    <Exec WorkingDirectory="$(projectDir)" Command="dotnet nccs $(NccsDebugArguments) $(MSBuildProjectFullPath)" />
+    <PropertyGroup>
+      <_NccsDebugArguments Condition="'$(Configuration)'=='Debug'">--debug --no-optimize</_NccsDebugArguments>
+      <_NccsDebugArguments Condition="'$(Configuration)'!='Debug'"></_NccsDebugArguments>
+    </PropertyGroup>
+    <Exec WorkingDirectory="$(projectDir)" Command="dotnet nccs $(_NccsDebugArguments) $(MSBuildProjectFullPath)" />
   </Target>
 
   <Target Name="RunNeoExpressBatch" AfterTargets="Build" Inputs="$(TargetNeoContractPath);$(NeoExpressBatch)" Outputs="$(IntermediateOutputPath)neoxp">
@@ -41,5 +44,14 @@
 
     <Exec Command="dotnet neoxp batch $(_NeoExpressBatchFilePath) --reset $(_NeoExpressParameter)" WorkingDirectory="$(_NeoExpressBatchFileDirectory)" />
     <Touch Files="$(IntermediateOutputPath)neoxp" AlwaysCreate="true" />
+  </Target>
+
+  <Target Name="GetTargetNeoContract" Returns="@(TargetNeoContract)">
+    <ItemGroup>
+      <TargetNeoContract Include="$(TargetNeoContractPath)">
+        <Name>$(TargetContractName)</Name>
+        <ManifestPath>$(TargetNeoManifestPath)</ManifestPath>
+      </TargetNeoContract>
+    </ItemGroup>
   </Target>
 </Project>

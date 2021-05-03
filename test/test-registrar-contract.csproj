@@ -26,16 +26,35 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="$(IntermediateOutputPath)/DevHawk.Registrar.contract-interface.cs" />
+    <NeoContractReference Include="..\src\registrar.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\src\registrar.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-  </ItemGroup>
+  <!-- TODO: Move the following target into a shared MSBuild file -->
+  <Target Name="GenerateContractInterface" BeforeTargets="ResolveProjectReferences" Condition="'@(NeoContractReference->Count())' &gt; 0">
+    <ItemGroup>
+      <ProjectReference Include="@(NeoContractReference)">
+        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      </ProjectReference>
+    </ItemGroup>
 
-  <Target Name="GenerateContractInterface" BeforeTargets="ResolveProjectReferences" Inputs="$(MSBuildThisFileDirectory)/../src/bin/sc/DevHawk.Registrar.manifest.json" Outputs="$(IntermediateOutputPath)/DevHawk.Registrar.contract-interface.cs">
-    <NeoContractInterface ManifestFile="$(MSBuildThisFileDirectory)/../src/bin/sc/DevHawk.Registrar.manifest.json" OutputFile="$(IntermediateOutputPath)/DevHawk.Registrar.contract-interface.cs" RootNamespace="$(RootNamespace)" />
+    <MSBuild Projects="@(NeoContractReference)" Targets="GetTargetNeoContract">
+      <Output TaskParameter="TargetOutputs" ItemName="TargetNeoContract" />
+    </MSBuild>
+
+    <ItemGroup>
+      <NeoContractManifest Include="@(TargetNeoContract->Metadata('ManifestPath'))" >
+        <OutputFile>$(IntermediateOutputPath)@(TargetNeoContract->Metadata('Name')).contract-interface.cs</OutputFile>
+      </NeoContractManifest>
+    </ItemGroup>
+
+    <NeoContractInterface
+      ManifestFile="@(NeoContractManifest)"
+      OutputFile="@(NeoContractManifest->Metadata('OutputFile'))"
+      RootNamespace="$(RootNamespace)"/>
+
+    <ItemGroup>
+      <Compile Include="@(NeoContractManifest->Metadata('OutputFile'))" />
+    </ItemGroup>
+
   </Target>
 </Project>
