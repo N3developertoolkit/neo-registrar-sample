@@ -36,11 +36,21 @@
             "stopAtEntry": false
         },
         {
+            "name": "deploy",
+            "type": "neo-contract",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/src/bin/sc/DevHawk.Registrar.nef",
+            "neo-express": "${workspaceFolder}/default.neo-express",
+            "invocation": "deploy",
+            "deploy-signer": "@owen"
+        },
+        {
             "name": "register",
             "type": "neo-contract",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/bin/Debug/net5.0/registrar.nef",
+            "program": "${workspaceFolder}/src/bin/sc/DevHawk.Registrar.nef",
             "neo-express": "${workspaceFolder}/default.neo-express",
             "invocation": {
                 "operation": "register",
@@ -58,7 +68,7 @@
             "type": "neo-contract",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/bin/Debug/net5.0/registrar.nef",
+            "program": "${workspaceFolder}/src/bin/sc/DevHawk.Registrar.nef",
             "neo-express": "${workspaceFolder}/default.neo-express",
             "invocation": {
                 "operation": "register",
@@ -77,7 +87,7 @@
             "type": "neo-contract",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/bin/Debug/net5.0/registrar.nef",
+            "program": "${workspaceFolder}/src/bin/sc/DevHawk.Registrar.nef",
             "neo-express": "${workspaceFolder}/default.neo-express",
             "invocation": {
                 "trace-file": "${workspaceFolder}/trace-files/0x183c689478046f158909505a2b449c7e98f2e398e4467508cc4a955bea05f02d.neo-trace"
@@ -91,7 +101,7 @@
             "type": "neo-contract",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/bin/Debug/net5.0/registrar.nef",
+            "program": "${workspaceFolder}/src/bin/sc/DevHawk.Registrar.nef",
             "neo-express": "${workspaceFolder}/default.neo-express",
             "invocation": {
                 "operation": "delete",
