@@ -115,20 +115,8 @@ namespace DevHawk.Contracts
             storageMap = new StorageMap(Storage.CurrentContext, prefix);
         }
 
-        public UInt160 Get(string domain)
-        {
-            var value = storageMap.Get(domain);
-            return (value == null) ? UInt160.Zero : (UInt160)value;
-        }
-
-        public void Put(string domain, UInt160 owner)
-        {
-            storageMap.Put(domain, (ByteString)owner);
-        }
-
-        public void Delete(string domain)
-        {
-            storageMap.Delete(domain);
-        }
+        public UInt160 Get(string domain) => (UInt160)storageMap.Get(domain) ?? UInt160.Zero;
+        public void Put(string domain, UInt160 owner) => storageMap.Put(domain, (ByteString)owner);
+        public void Delete(string domain) => storageMap.Delete(domain);
     }
 }
