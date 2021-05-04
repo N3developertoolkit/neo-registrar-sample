@@ -1,5 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <ContractManifestPath>..\src\bin\sc\DevHawk.Registrar.manifest.json</ContractManifestPath>
+    <ContractName>DevHawk.Registrar</ContractName>
     <LangVersion>9</LangVersion>
     <IsPackable>false</IsPackable>
     <NeoTestPackagesVersion>1.0.25-preview</NeoTestPackagesVersion>
@@ -9,7 +11,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <NeoContractReference Include="..\src\registrar.csproj" />
+    <ProjectReference Include="..\src\registrar.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -28,4 +32,22 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+
+  <Target Name="ConfigureNeoContractInterface" BeforeTargets="ExecuteNeoContractInterface">
+    <PropertyGroup>
+      <_ContractManifestPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(ContractManifestPath)'))</_ContractManifestPath>
+      <_ContractInterfacePath>$([MSBuild]::NormalizePath('$(IntermediateOutputPath)', '$(ContractName).contract-interface.cs'))</_ContractInterfacePath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Include="$(_ContractInterfacePath)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ExecuteNeoContractInterface" BeforeTargets="ResolveProjectReferences"
+          Inputs="$(_ContractManifestPath)"
+          Outputs="$(_ContractInterfacePath)">
+    <NeoContractInterface ManifestFile="$(_ContractManifestPath)" OutputFile="$(_ContractInterfacePath)" RootNamespace="$(RootNamespace)"/>
+  </Target>
+
 </Project>
