@@ -27,15 +27,28 @@ namespace DevHawk.RegistrarTests
         }
 
         [Fact]
+        public void contract_owner_in_storage()
+        {
+            var settings = chain.GetProtocolSettings();
+            var owen = chain.GetDefaultAccount("owen").ToScriptHash(settings.AddressVersion);
+
+            using var snapshot = fixture.GetSnapshot();
+
+            // check to make sure contract owner stored in contract storage
+            var storages = snapshot.GetContractStorages<Registrar>();
+            storages.Count().Should().Be(1);
+            storages.TryGetValue(OWNER_STORAGE, out var item).Should().BeTrue();
+            item!.Should().Be(owen);
+        }
+
+        [Fact]
         public void Can_register_domain()
         {
             var settings = chain.GetProtocolSettings();
             var alice = chain.GetDefaultAccount("alice").ToScriptHash(settings.AddressVersion);
+            var owen = chain.GetDefaultAccount("owen").ToScriptHash(settings.AddressVersion);
 
             using var snapshot = fixture.GetSnapshot();
-
-            // pretest check to ensure storage is empty as expected
-            snapshot.GetContractStorages<Registrar>().Any().Should().BeFalse();
 
             // ExecuteScript converts the provided expression(s) into a Neo script
             // loads them into the engine and executes it 
@@ -55,7 +68,8 @@ namespace DevHawk.RegistrarTests
 
             // ensure correct storage item was created 
             var storages = snapshot.GetContractStorages<Registrar>();
-            storages.TryGetValue(DOMAIN_NAME_BYTES, out var item).Should().BeTrue();
+            var domainOwners = storages.StorageMap(DOMAIN_OWNERS);
+            domainOwners.TryGetValue(DOMAIN_NAME, out var item).Should().BeTrue();
             item!.Should().Be(alice);
         }
     }
