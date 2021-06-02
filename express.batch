@@ -1,7 +1,7 @@
 transfer 10000 gas genesis owen
 transfer 10000 gas genesis alice
 transfer 10000 gas genesis bob
-contract deploy ./src/bin/sc/DevHawk.Registrar.nef owen
+contract deploy ./src/bin/sc/registrar.nef owen
 checkpoint create ./checkpoints/contract-deployed -f
 contract invoke ./invoke-files/register-sample-domain.neo-invoke.json bob
 checkpoint create ./checkpoints/sample-domain-registered -f

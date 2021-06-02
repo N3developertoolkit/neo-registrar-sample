@@ -35,13 +35,13 @@ namespace DevHawk.RegistrarTests
 
             using var snapshot = fixture.GetSnapshot();
  
-            var domainOwners = snapshot.GetContractStorages<Registrar>().StorageMap(DOMAIN_OWNERS);
+            var domainOwners = snapshot.GetContractStorages<registrar>().StorageMap(DOMAIN_OWNERS);
             domainOwners.TryGetValue(DOMAIN_NAME, out var item).Should().BeTrue();
             item!.Should().Be(bob);
 
             using var engine = new TestApplicationEngine(snapshot, settings, alice);
             using var monitor = engine.Monitor();
-            engine.ExecuteScript<Registrar>(c => c.register(DOMAIN_NAME, alice));
+            engine.ExecuteScript<registrar>(c => c.register(DOMAIN_NAME, alice));
             monitor.Should().Raise("Log")
                 .WithSender(engine)
                 .WithArgs<LogEventArgs>(args => args.Message == "Domain already registered");
@@ -59,18 +59,18 @@ namespace DevHawk.RegistrarTests
 
             using var snapshot = fixture.GetSnapshot();
 
-            var domainOwners = snapshot.GetContractStorages<Registrar>().StorageMap(DOMAIN_OWNERS);
+            var domainOwners = snapshot.GetContractStorages<registrar>().StorageMap(DOMAIN_OWNERS);
             domainOwners.TryGetValue(DOMAIN_NAME, out var item).Should().BeTrue();
             item!.Should().Be(bob);
 
             using var engine = new TestApplicationEngine(snapshot, settings, bob);
-            engine.ExecuteScript<Registrar>(c => c.delete(DOMAIN_NAME));
+            engine.ExecuteScript<registrar>(c => c.delete(DOMAIN_NAME));
 
             engine.State.Should().Be(VMState.HALT);
             engine.ResultStack.Should().HaveCount(1);
             engine.ResultStack.Peek(0).Should().BeTrue();
 
-            domainOwners = snapshot.GetContractStorages<Registrar>().StorageMap(DOMAIN_OWNERS);
+            domainOwners = snapshot.GetContractStorages<registrar>().StorageMap(DOMAIN_OWNERS);
             domainOwners.TryGetValue(DOMAIN_NAME, out _).Should().BeFalse();
         }
     }
