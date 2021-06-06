@@ -33,7 +33,7 @@
       <_NccsOptimizeArgument Condition="'$(Configuration)'!='Debug'"></_NccsOptimizeArgument>
     </PropertyGroup>
 
-    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet nccs --debug $(_NccsOptimizeArgument) $(MSBuildProjectFullPath)" />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet nccs --debug $(_NccsOptimizeArgument) &quot;$(MSBuildProjectFullPath)&quot;" />
   </Target>
 
   <Target Name="ExecuteNeoExpressBatch" AfterTargets="Compile" 
