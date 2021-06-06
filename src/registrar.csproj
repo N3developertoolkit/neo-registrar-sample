@@ -43,7 +43,7 @@
       <_NeoExpressBatchDir>$([System.IO.Path]::GetDirectoryName('$(_NeoExpressBatchPath)'))</_NeoExpressBatchDir>
     </PropertyGroup>
 
-    <Exec Command="dotnet neoxp batch express.batch --reset" WorkingDirectory="$(_NeoExpressBatchDir)" />
+    <Exec Command="dotnet neoxp batch ./express.batch --reset" WorkingDirectory="$(_NeoExpressBatchDir)" />
     <Touch Files="$(IntermediateOutputPath)neoxp" AlwaysCreate="true" />
   </Target>
 
