@@ -3,6 +3,7 @@
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
+    "$schema": "vscode://schemas/launch",
     "configurations": [
         {
             "name": "cli-client: register",
@@ -80,7 +81,7 @@
             "return-types": [
                 "bool"
             ],
-            "checkpoint": "./checkpoints/sample-domain-registered.neoxp-checkpoint",
+            "checkpoint": "${workspaceFolder}/checkpoints/sample-domain-registered.neoxp-checkpoint",
         },
         {
             "name": "delete",
@@ -98,9 +99,9 @@
             "return-types": [
                 "bool"
             ],
-            "checkpoint": "./checkpoints/sample-domain-registered.neoxp-checkpoint",
+            "checkpoint": "${workspaceFolder}/checkpoints/sample-domain-registered.neoxp-checkpoint",
             "signers": [
-                "bob"
+                "Nap3DnHR35vVLKGaRWccwNp3dTH96Nsag4"
             ]
         }
     ]
