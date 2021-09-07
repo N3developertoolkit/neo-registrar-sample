@@ -12,10 +12,10 @@
 
   <Target Name="ConfigureContractOutputProperties" BeforeTargets="ExecuteNccs">
     <PropertyGroup>
-      <_NccsOutputDirectory>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', 'bin\sc'</_NccsOutputDirectory>
-      <_OutputNeoContractPath>$([MSBuild]::NormalizePath('$(_NccsOutputDirectory)', '$(NeoContractName).nef'))</_OutputNeoContractPath>
-      <_OutputNeoContractManifestPath>$([MSBuild]::NormalizePath('$(_NccsOutputDirectory)', '$(NeoContractName).manifest.json'))</_OutputNeoContractManifestPath>
-      <_OutputNeoContractDebugInfoPath>$([MSBuild]::NormalizePath('$(_NccsOutputDirectory)', '$(NeoContractName).nefdbgnfo'))</_OutputNeoContractDebugInfoPath>
+      <_NccsOutputDirectory>bin\sc</_NccsOutputDirectory>
+      <_OutputNeoContractPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(_NccsOutputDirectory)', '$(NeoContractName).nef'))</_OutputNeoContractPath>
+      <_OutputNeoContractManifestPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(_NccsOutputDirectory)', '$(NeoContractName).manifest.json'))</_OutputNeoContractManifestPath>
+      <_OutputNeoContractDebugInfoPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(_NccsOutputDirectory)', '$(NeoContractName).nefdbgnfo'))</_OutputNeoContractDebugInfoPath>
     </PropertyGroup>
   </Target>
 
