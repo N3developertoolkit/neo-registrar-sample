@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <NeoContractName>DevHawk.Registrar</NeoContractName>
+    <NeoContractName>registrar</NeoContractName>
     <NeoExpressBatchFile>..\express.batch</NeoExpressBatchFile>
     <Nullable>enable</Nullable>
     <TargetFramework>net5.0</TargetFramework>
@@ -12,10 +12,10 @@
 
   <Target Name="ConfigureContractOutputProperties" BeforeTargets="ExecuteNccs">
     <PropertyGroup>
-      <_NccsOutputDirectory>bin\sc</_NccsOutputDirectory>
-      <_OutputNeoContractPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(_NccsOutputDirectory)', '$(NeoContractName).nef'))</_OutputNeoContractPath>
-      <_OutputNeoContractManifestPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(_NccsOutputDirectory)', '$(NeoContractName).manifest.json'))</_OutputNeoContractManifestPath>
-      <_OutputNeoContractDebugInfoPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(_NccsOutputDirectory)', '$(NeoContractName).nefdbgnfo'))</_OutputNeoContractDebugInfoPath>
+      <_NccsOutputDirectory>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', 'bin\sc'</_NccsOutputDirectory>
+      <_OutputNeoContractPath>$([MSBuild]::NormalizePath('$(_NccsOutputDirectory)', '$(NeoContractName).nef'))</_OutputNeoContractPath>
+      <_OutputNeoContractManifestPath>$([MSBuild]::NormalizePath('$(_NccsOutputDirectory)', '$(NeoContractName).manifest.json'))</_OutputNeoContractManifestPath>
+      <_OutputNeoContractDebugInfoPath>$([MSBuild]::NormalizePath('$(_NccsOutputDirectory)', '$(NeoContractName).nefdbgnfo'))</_OutputNeoContractDebugInfoPath>
     </PropertyGroup>
   </Target>
 
@@ -33,7 +33,7 @@
       <_NccsOptimizeArgument Condition="'$(Configuration)'!='Debug'"></_NccsOptimizeArgument>
     </PropertyGroup>
 
-    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet nccs --debug $(_NccsOptimizeArgument) &quot;$(MSBuildProjectFullPath)&quot;" />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet nccs --debug $(_NccsOptimizeArgument) &quot;$(MSBuildProjectFullPath)&quot; --contract-name $(NeoContractName)" />
   </Target>
 
   <Target Name="ExecuteNeoExpressBatch" AfterTargets="Compile" 
