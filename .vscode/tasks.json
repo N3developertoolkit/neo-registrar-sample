@@ -14,6 +14,15 @@
             "problemMatcher": []
         },
         {
+            "label": "generate trace",
+            "command": "dotnet",
+            "type": "shell",
+            "args": ["neotrace", "tx", "0x45239b3764a0973c89c1fca6bf1ef438a462f7fb705cdf7cf1739abe48328dad", "-r", "testnet"],
+            "options": {
+                "cwd": "${workspaceFolder}/trace-files"
+            }
+        },
+        {
             "label": "build",
             "dependsOn": "restore-tools",
             "command": "dotnet",

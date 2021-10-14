@@ -13,6 +13,12 @@
       "commands": [
         "nccs"
       ]
+    },
+    "neo.trace": {
+      "version": "3.0.21",
+      "commands": [
+        "neotrace"
+      ]
     }
   }
 }
