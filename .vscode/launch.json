@@ -47,6 +47,15 @@
             "deploy-signer": "@owen"
         },
         {
+            "name": "register (trace)",
+            "type": "neo-contract",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/bin/sc/registrar.nef",
+            "invocation": {
+                "trace-file": "${workspaceFolder}/trace-files/0x45239b3764a0973c89c1fca6bf1ef438a462f7fb705cdf7cf1739abe48328dad.neo-trace"
+            }
+        },
+        {
             "name": "register",
             "type": "neo-contract",
             "request": "launch",
