@@ -4,10 +4,10 @@
     <IsPackable>false</IsPackable>
     <NeoContractManifestPath>..\src\bin\sc\registrar.manifest.json</NeoContractManifestPath>
     <NeoContractName>DevHawk.Registrar</NeoContractName>
-    <NeoTestPackagesVersion>1.0.34-preview</NeoTestPackagesVersion>
+    <NeoTestPackagesVersion>3.1.8</NeoTestPackagesVersion>
     <Nullable>enable</Nullable>
     <RootNamespace>DevHawk.RegistrarTests</RootNamespace>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>

@@ -47,6 +47,27 @@
                 "reveal": "silent"
             },
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "test runner",
+            "dependsOn": "build",
+            "type": "shell",
+            "command": "dotnet",
+            "args": [
+                "neo-test-runner",
+                "./invoke-files/register-sample-domain.neo-invoke.json",
+                "--checkpoint",
+                "./checkpoints/contract-deployed.neoxp-checkpoint",
+                "--account",
+                "alice",
+                "--express",
+                "./default.neo-express",
+                "--storages",
+                "registrar",
+                "--nef-file",
+                "./src/bin/sc/registrar.nef"
+            ],
+            "problemMatcher": []
         }
     ]
 }
