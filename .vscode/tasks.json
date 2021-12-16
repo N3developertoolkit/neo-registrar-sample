@@ -59,7 +59,7 @@
                 "--checkpoint",
                 "./checkpoints/contract-deployed.neoxp-checkpoint",
                 "--account",
-                "alice",
+                "bob",
                 "--express",
                 "./default.neo-express",
                 "--storages",
