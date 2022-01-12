@@ -93,12 +93,12 @@
       "name": "sam",
       "accounts": [
         {
-          "private-key": "20912915f655649a7c2a908537a6469075e53f76a629c3c60a6188cf7b84da6b",
-          "script-hash": "NQYU9yXH1PRMKR2Uz2pesabryJ8vvC9rQq",
+          "private-key": "537e5d99e18bceffd7bc276ca37d4f4a5dd5975503c15cce1917f6fb986e9b98",
+          "script-hash": "NbVvbidt6ytvziCVT8C2i6skAYxMBZPGVd",
           "label": null,
           "is-default": true,
           "contract": {
-            "script": "0c210242c58a9545f3ff79085b82903b31ff59fb0436ec95a97dbdf515a5c0c23493d541747476aa",
+            "script": "0c210209d6306b3fe66dacdc42209165afbe60705dd73ecf06f5608d9f5d10e6bb33084156e7b327",
             "parameters": [
               "Signature"
             ]
