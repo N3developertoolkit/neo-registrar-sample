@@ -2,11 +2,12 @@
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>DevHawk.Registrar.Cli</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Neo.Network.RPC.RpcClient" Version="3.0.0-mono-master-00829" />
-    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.21216.1" />
+    <PackageReference Include="Neo.Network.RPC.RpcClient" Version="3.1.0" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta3.22114.1" />
+    <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta3.22114.1" />
   </ItemGroup>
 </Project>

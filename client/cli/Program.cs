@@ -1,7 +1,7 @@
 ﻿using System;
 using System.CommandLine;
-using System.CommandLine.Invocation;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Neo;
 using Neo.Network.P2P.Payloads;
@@ -14,54 +14,68 @@ namespace DevHawk.Registrar.Cli
 {
     class Program
     {
-        const uint Network = 112694212;
-        const byte AddressVersion = 53;
         const ushort RpcPort = 50012;
-        readonly static UInt160 RegistrarContractHash = UInt160.Parse("0xdfa2d9762736cd6edb09c066db646d967e09abbb");
 
-        static ProtocolSettings ProtocolSettings => ProtocolSettings.Default with
+        readonly ProtocolSettings settings;
+        readonly UInt160 contractHash;
+
+        public Program(ProtocolSettings settings, UInt160 contractHash)
         {
-            Network = Network,
-            AddressVersion = AddressVersion,
-        };
+            this.settings = settings;
+            this.contractHash = contractHash;
+        }
 
         static async Task Main(string[] args)
         {
-            var queryCmd = new Command("query")
-            {
-                new Argument<string>("domain"),
-            };
-            queryCmd.Handler = CommandHandler.Create<string>(QueryAsync);
+            var rpcClient = new RpcClient(new Uri($"http://localhost:{RpcPort}"));
 
+            var version = await rpcClient.GetVersionAsync().ConfigureAwait(false);
+            var settings = ProtocolSettings.Default with
+            {
+                Network = version.Protocol.Network,
+                AddressVersion = version.Protocol.AddressVersion
+            };
+
+            var contracts = await rpcClient.ListContractsAsync().ConfigureAwait(false);
+            var contract = contracts.Single(t => t.manifest.Name == "registrar");
+
+            var program = new Program(settings, contract.hash);
+
+            var domainArg = new Argument<string>("domain");
+            var queryCmd = new Command("query") { domainArg };
+
+            queryCmd.SetHandler((string domain) => program.QueryAsync(domain), domainArg);
+
+            var ownerArg = new Argument<string>("owner");
+            var privateKeyArg = new Argument<string>("private-key");
             var registerCmd = new Command("register")
             {
-                new Argument<string>("domain"),
-                new Argument<string>("owner"),
-                new Option<FileInfo>(new[] { "-w", "--wallet-path" }, "Path to wallet file used to sign transaction"),
-                new Option<string>(new[] { "-k", "--private-key" }, "Private key used to sign transaction"),
+                domainArg, ownerArg, privateKeyArg
             };
 
-            registerCmd.Handler = CommandHandler.Create<string, string, Options>(RegisterAsync);
+            registerCmd.SetHandler(
+                (string domain, string owner, string privateKey) =>
+                    program.RegisterAsync(domain, owner, privateKey),
+                domainArg, ownerArg, privateKeyArg);
 
             var rootCmd = new RootCommand()
             {
-                queryCmd,
-                registerCmd,
+                queryCmd, registerCmd,
             };
 
             await rootCmd.InvokeAsync(args).ConfigureAwait(false);
         }
 
 
-        static Task<int> QueryAsync(string domain)
+        Task<int> QueryAsync(string domain)
         {
             return HandleErrors(async () =>
             {
                 var domainParam = new ContractParameter(ContractParameterType.String) { Value = domain };
                 using var builder = new ScriptBuilder();
-                builder.EmitDynamicCall(RegistrarContractHash, "query", domainParam);
+                builder.EmitDynamicCall(contractHash, "query", domainParam);
 
-                var rpcClient = new RpcClient(new Uri($"http://localhost:{RpcPort}"), protocolSettings: ProtocolSettings);
+                var rpcClient = new RpcClient(new Uri($"http://localhost:{RpcPort}"), protocolSettings: settings);
                 var result = await rpcClient.InvokeScriptAsync(builder.ToArray()).ConfigureAwait(false);
 
                 if (!string.IsNullOrEmpty(result.Exception))
@@ -75,26 +89,23 @@ namespace DevHawk.Registrar.Cli
                 }
 
                 var ownerScriptHash = ToUInt160(result.Stack[0]);
-                await Console.Out.WriteLineAsync($"query: {domain} owned by {ownerScriptHash.ToAddress(AddressVersion)}").ConfigureAwait(false);
+                await Console.Out.WriteLineAsync($"query: {domain} owned by {ownerScriptHash.ToAddress(settings.AddressVersion)}").ConfigureAwait(false);
             });
         }
 
-        static Task<int> RegisterAsync(string domain, string owner, Options options)
+        Task<int> RegisterAsync(string domain, string owner, string privateKey)
         {
             return HandleErrors(async () =>
             {
-                if (!options.TryGetKeyPair(out var keyPair))
-                {
-                    throw new Exception("private key or wallet must be specified");
-                }
+                var keyPair = new KeyPair(privateKey.HexToBytes());
 
-                var ownerAccount = owner.ToScriptHash(AddressVersion);
+                var ownerAccount = owner.ToScriptHash(settings.AddressVersion);
                 var domainParam = new ContractParameter(ContractParameterType.String) { Value = domain };
                 var ownerParam = new ContractParameter(ContractParameterType.Hash160) { Value = ownerAccount };
                 using var builder = new ScriptBuilder();
-                builder.EmitDynamicCall(RegistrarContractHash, "register", domainParam, ownerParam);
+                builder.EmitDynamicCall(contractHash, "register", domainParam, ownerParam);
 
-                var rpcClient = new RpcClient(new Uri($"http://localhost:{RpcPort}"), protocolSettings: ProtocolSettings);
+                var rpcClient = new RpcClient(new Uri($"http://localhost:{RpcPort}"), protocolSettings: settings);
                 var factory = new TransactionManagerFactory(rpcClient);
                 var signers = new[] { new Signer { Account = ownerAccount, Scopes = WitnessScope.CalledByEntry } };
                 var tm = await factory.MakeTransactionAsync(builder.ToArray(), signers).ConfigureAwait(false);

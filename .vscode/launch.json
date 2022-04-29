@@ -10,7 +10,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/client/cli/bin/Debug/net5.0/cli-client.dll",
+            "program": "${workspaceFolder}/client/cli/bin/Debug/net6.0/cli-client.dll",
             "args": [
                 "register",
                 "unregistered.domain",
@@ -27,7 +27,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/client/cli/bin/Debug/net5.0/cli-client.dll",
+            "program": "${workspaceFolder}/client/cli/bin/Debug/net6.0/cli-client.dll",
             "args": [
                 "query",
                 "unregistered.domain"
