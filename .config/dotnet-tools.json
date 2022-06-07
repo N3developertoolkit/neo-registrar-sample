@@ -21,7 +21,7 @@
       ]
     },
     "neo.test.runner": {
-      "version": "3.3.8-preview",
+      "version": "3.3.9-preview",
       "commands": [
         "neo-test-runner"
       ]
