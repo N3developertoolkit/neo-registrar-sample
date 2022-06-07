@@ -3,25 +3,25 @@
   "isRoot": true,
   "tools": {
     "neo.express": {
-      "version": "3.1.38",
+      "version": "3.3.7-preview",
       "commands": [
         "neoxp"
       ]
     },
     "neo.compiler.csharp": {
-      "version": "3.1.0",
+      "version": "3.3.0",
       "commands": [
         "nccs"
       ]
     },
     "neo.trace": {
-      "version": "3.1.38",
+      "version": "3.3.7-preview",
       "commands": [
         "neotrace"
       ]
     },
     "neo.test.runner": {
-      "version": "3.1.10",
+      "version": "3.3.8-preview",
       "commands": [
         "neo-test-runner"
       ]

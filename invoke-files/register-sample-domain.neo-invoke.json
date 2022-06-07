@@ -1,6 +1,6 @@
 [
     {
-        "contract": "registrar",
+        "contract": "DevHawk.Registrar",
         "operation": "register",
         "args": [
             "sample.domain",

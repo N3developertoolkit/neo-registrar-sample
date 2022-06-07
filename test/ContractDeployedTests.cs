@@ -35,7 +35,7 @@ namespace DevHawk.RegistrarTests
             using var snapshot = fixture.GetSnapshot();
 
             // check to make sure contract owner stored in contract storage
-            var storages = snapshot.GetContractStorages<registrar>();
+            var storages = snapshot.GetContractStorages<Registrar>();
             storages.Count().Should().Be(1);
             storages.TryGetValue(OWNER_STORAGE, out var item).Should().BeTrue();
             item!.Should().Be(owen);
@@ -60,14 +60,14 @@ namespace DevHawk.RegistrarTests
                 logs.Add(args.Message);
             };
 
-            engine.ExecuteScript<registrar>(c => c.register(DOMAIN_NAME, alice));
+            engine.ExecuteScript<Registrar>(c => c.register(DOMAIN_NAME, alice));
 
             engine.State.Should().Be(VMState.HALT);
             engine.ResultStack.Should().HaveCount(1);
             engine.ResultStack.Peek(0).Should().BeTrue();
 
             // ensure correct storage item was created 
-            var storages = snapshot.GetContractStorages<registrar>();
+            var storages = snapshot.GetContractStorages<Registrar>();
             var domainOwners = storages.StorageMap(DOMAIN_OWNERS);
             domainOwners.TryGetValue(DOMAIN_NAME, out var item).Should().BeTrue();
             item!.Should().Be(alice);
