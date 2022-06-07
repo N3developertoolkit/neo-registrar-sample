@@ -8,7 +8,7 @@ using Neo.SmartContract;
 using Neo.VM;
 using NeoTestHarness;
 using Xunit;
-
+using Xunit.Abstractions;
 using static DevHawk.RegistrarTests.Common;
 
 namespace DevHawk.RegistrarTests
@@ -18,12 +18,14 @@ namespace DevHawk.RegistrarTests
     {
         readonly CheckpointFixture fixture;
         readonly ExpressChain chain;
+        readonly ITestOutputHelper output;
 
 
-        public SampleDomainRegisteredTests(CheckpointFixture<SampleDomainRegisteredTests> fixture)
+        public SampleDomainRegisteredTests(CheckpointFixture<SampleDomainRegisteredTests> fixture, ITestOutputHelper output)
         {
             this.fixture = fixture;
             this.chain = fixture.FindChain();
+            this.output = output;
         }
 
         [Fact]
@@ -42,6 +44,12 @@ namespace DevHawk.RegistrarTests
             using var engine = new TestApplicationEngine(snapshot, settings, alice);
             using var monitor = engine.Monitor();
             engine.ExecuteScript<Registrar>(c => c.register(DOMAIN_NAME, alice));
+
+            if (engine.State != VMState.HALT)
+            {
+                output.WriteLine($"FaultException: {engine.FaultException}");
+            }
+
             monitor.Should().Raise("Log")
                 .WithSender(engine)
                 .WithArgs<LogEventArgs>(args => args.Message == "Domain already registered");
@@ -65,6 +73,11 @@ namespace DevHawk.RegistrarTests
 
             using var engine = new TestApplicationEngine(snapshot, settings, bob);
             engine.ExecuteScript<Registrar>(c => c.delete(DOMAIN_NAME));
+
+            if (engine.State != VMState.HALT)
+            {
+                output.WriteLine($"FaultException: {engine.FaultException}");
+            }
 
             engine.State.Should().Be(VMState.HALT);
             engine.ResultStack.Should().HaveCount(1);

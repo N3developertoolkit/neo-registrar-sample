@@ -9,7 +9,7 @@ using Neo.VM;
 using Neo.Wallets;
 using NeoTestHarness;
 using Xunit;
-
+using Xunit.Abstractions;
 using static DevHawk.RegistrarTests.Common;
 
 namespace DevHawk.RegistrarTests
@@ -19,11 +19,13 @@ namespace DevHawk.RegistrarTests
     {
         readonly CheckpointFixture fixture;
         readonly ExpressChain chain;
+        readonly ITestOutputHelper output;
 
-        public ContractDeployedTests(CheckpointFixture<ContractDeployedTests> fixture)
+        public ContractDeployedTests(CheckpointFixture<ContractDeployedTests> fixture, ITestOutputHelper output)
         {
             this.fixture = fixture;
             this.chain = fixture.FindChain();
+            this.output = output;
         }
 
         [Fact]
@@ -62,6 +64,10 @@ namespace DevHawk.RegistrarTests
 
             engine.ExecuteScript<Registrar>(c => c.register(DOMAIN_NAME, alice));
 
+            if (engine.State != VMState.HALT)
+            {
+                output.WriteLine($"FaultException: {engine.FaultException}");
+            }
             engine.State.Should().Be(VMState.HALT);
             engine.ResultStack.Should().HaveCount(1);
             engine.ResultStack.Peek(0).Should().BeTrue();
