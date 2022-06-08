@@ -59,7 +59,7 @@
             "name": "register",
             "type": "neo-contract",
             "request": "launch",
-            // "preLaunchTask": "build",
+            "preLaunchTask": "build",
             "program": "${workspaceFolder}/src/bin/sc/registrar.nef",
             "neo-express": "${workspaceFolder}/default.neo-express",
             "invocation": {
@@ -69,9 +69,12 @@
                     "@bob"
                 ]
             },
+            "signers": [
+                "@bob"
+            ],
             "return-types": [
                 "bool"
-            ],
+            ]
         },
         {
             "name": "register (fail)",
@@ -80,6 +83,7 @@
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/src/bin/sc/registrar.nef",
             "neo-express": "${workspaceFolder}/default.neo-express",
+            "checkpoint": "${workspaceFolder}/checkpoints/sample-domain-registered.neoxp-checkpoint",
             "invocation": {
                 "operation": "register",
                 "args": [
@@ -87,10 +91,12 @@
                     "@alice"
                 ]
             },
+            "signers": [
+                "@alice"
+            ],
             "return-types": [
                 "bool"
             ],
-            "checkpoint": "${workspaceFolder}/checkpoints/sample-domain-registered.neoxp-checkpoint",
         },
         {
             "name": "delete",
@@ -99,19 +105,19 @@
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/src/bin/sc/registrar.nef",
             "neo-express": "${workspaceFolder}/default.neo-express",
+            "checkpoint": "${workspaceFolder}/checkpoints/sample-domain-registered.neoxp-checkpoint",
             "invocation": {
                 "operation": "delete",
                 "args": [
                     "sample.domain"
                 ]
             },
+            "signers": [
+                "@bob"
+            ],
             "return-types": [
                 "bool"
             ],
-            "checkpoint": "${workspaceFolder}/checkpoints/sample-domain-registered.neoxp-checkpoint",
-            "signers": [
-                "Nap3DnHR35vVLKGaRWccwNp3dTH96Nsag4"
-            ]
         }
     ]
 }
