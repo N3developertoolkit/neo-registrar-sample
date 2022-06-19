@@ -37,7 +37,7 @@ namespace DevHawk.Registrar.Cli
             };
 
             var contracts = await rpcClient.ListContractsAsync().ConfigureAwait(false);
-            var contract = contracts.Single(t => t.manifest.Name == "registrar");
+            var contract = contracts.Single(t => t.manifest.Name == "DevHawk.Registrar");
 
             var program = new Program(settings, contract.hash);
 
@@ -89,7 +89,11 @@ namespace DevHawk.Registrar.Cli
                 }
 
                 var ownerScriptHash = ToUInt160(result.Stack[0]);
-                await Console.Out.WriteLineAsync($"query: {domain} owned by {ownerScriptHash.ToAddress(settings.AddressVersion)}").ConfigureAwait(false);
+                var text = ownerScriptHash.Equals(UInt160.Zero)
+                    ? $"query: {domain} unowned"
+                    : $"query: {domain} owned by {ownerScriptHash.ToAddress(settings.AddressVersion)}";
+
+                await Console.Out.WriteLineAsync(text).ConfigureAwait(false);
             });
         }
 
@@ -97,7 +101,7 @@ namespace DevHawk.Registrar.Cli
         {
             return HandleErrors(async () =>
             {
-                var keyPair = new KeyPair(privateKey.HexToBytes());
+                var keyPair = new KeyPair(Convert.FromHexString(privateKey));
 
                 var ownerAccount = owner.ToScriptHash(settings.AddressVersion);
                 var domainParam = new ContractParameter(ContractParameterType.String) { Value = domain };

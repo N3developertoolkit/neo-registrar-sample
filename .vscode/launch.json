@@ -14,9 +14,8 @@
             "args": [
                 "register",
                 "unregistered.domain",
-                "Nc5f5k26eZQTSdARghwGswfBWjva5MwmLb",
-                "-k",
-                "f5e2928a05f90b5c18534f1aaa1b71cd5b9daf9594082b197f18f348d8e07449"
+                "NbHghJRnQexXtAEXpEn3jAqtQX3UWCigZH",
+                "8f511596dd5399b61a6bfffc4e36ed80a618766b346bf4215ca960734afa4f29"
             ],
             "cwd": "${workspaceFolder}/client/cli",
             "console": "internalConsole",
