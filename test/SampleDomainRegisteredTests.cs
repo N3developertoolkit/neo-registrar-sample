@@ -37,7 +37,7 @@ namespace DevHawk.RegistrarTests
 
             using var snapshot = fixture.GetSnapshot();
  
-            var domainOwners = snapshot.GetContractStorages<Registrar>().StorageMap(DOMAIN_OWNERS);
+            var domainOwners = snapshot.GetContractStorages<Registrar>().StorageMap(DOMAIN_OWNERS_PREFIX);
             domainOwners.TryGetValue(DOMAIN_NAME, out var item).Should().BeTrue();
             item!.Should().Be(bob);
 
@@ -67,7 +67,7 @@ namespace DevHawk.RegistrarTests
 
             using var snapshot = fixture.GetSnapshot();
 
-            var domainOwners = snapshot.GetContractStorages<Registrar>().StorageMap(DOMAIN_OWNERS);
+            var domainOwners = snapshot.GetContractStorages<Registrar>().StorageMap(0x00);
             domainOwners.TryGetValue(DOMAIN_NAME, out var item).Should().BeTrue();
             item!.Should().Be(bob);
 
@@ -83,7 +83,7 @@ namespace DevHawk.RegistrarTests
             engine.ResultStack.Should().HaveCount(1);
             engine.ResultStack.Peek(0).Should().BeTrue();
 
-            domainOwners = snapshot.GetContractStorages<Registrar>().StorageMap(DOMAIN_OWNERS);
+            domainOwners = snapshot.GetContractStorages<Registrar>().StorageMap(DOMAIN_OWNERS_PREFIX);
             domainOwners.TryGetValue(DOMAIN_NAME, out _).Should().BeFalse();
         }
     }

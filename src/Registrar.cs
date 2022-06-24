@@ -14,7 +14,10 @@ namespace DevHawk.Contracts
     [ManifestExtra("Description", "This is an example contract")]
     public class Registrar : SmartContract
     {
-        readonly DomainStorage domainOwners = new DomainStorage(nameof(domainOwners));
+        const byte Prefix_DomainOwners = 0x00;
+        const byte Prefix_ContractOwner = 0xFF;
+
+        readonly DomainStorage domainOwners = new DomainStorage(Prefix_DomainOwners);
 
         public UInt160 Query(string domain)
         {
@@ -92,17 +95,21 @@ namespace DevHawk.Contracts
             if (update) return;
 
             var tx = (Transaction)Runtime.ScriptContainer;
-            Storage.Put(Storage.CurrentContext, nameof(Registrar), tx.Sender);
+            var key = new byte[] { Prefix_ContractOwner };
+            Storage.Put(Storage.CurrentContext, key, tx.Sender);
         }
 
         public static void Update(ByteString nefFile, string manifest)
         {
+            var key = new byte[] { Prefix_ContractOwner };
+            var contractOwner = (UInt160)Storage.Get(Storage.CurrentContext, key);
             var tx = (Transaction)Runtime.ScriptContainer;
-            var contractOwner = Storage.Get(Storage.CurrentContext, nameof(Registrar));
+
             if (!contractOwner.Equals(tx.Sender))
             {
                 throw new Exception("Only the contract owner can update the contract");
             }
+
             ContractManagement.Update(nefFile, manifest, null);
         }
     }
@@ -111,7 +118,7 @@ namespace DevHawk.Contracts
     {
         readonly StorageMap storageMap;
 
-        public DomainStorage(string prefix)
+        public DomainStorage(byte prefix)
         {
             storageMap = new StorageMap(Storage.CurrentContext, prefix);
         }
