@@ -3,7 +3,7 @@
   "isRoot": true,
   "tools": {
     "neo.express": {
-      "version": "3.3.14",
+      "version": "3.3.16",
       "commands": [
         "neoxp"
       ]
@@ -15,13 +15,13 @@
       ]
     },
     "neo.trace": {
-      "version": "3.3.14",
+      "version": "3.3.16",
       "commands": [
         "neotrace"
       ]
     },
     "neo.test.runner": {
-      "version": "3.3.13 ",
+      "version": "3.3.14",
       "commands": [
         "neo-test-runner"
       ]
