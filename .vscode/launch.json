@@ -46,15 +46,6 @@
             "deploy-signer": "@owen"
         },
         {
-            "name": "register (trace)",
-            "type": "neo-contract",
-            "request": "launch",
-            "program": "${workspaceFolder}/src/bin/sc/registrar.nef",
-            "invocation": {
-                "trace-file": "${workspaceFolder}/trace-files/0x45239b3764a0973c89c1fca6bf1ef438a462f7fb705cdf7cf1739abe48328dad.neo-trace"
-            }
-        },
-        {
             "name": "register",
             "type": "neo-contract",
             "request": "launch",
@@ -76,7 +67,7 @@
             ]
         },
         {
-            "name": "register (fail)",
+            "name": "register (domain registered)",
             "type": "neo-contract",
             "request": "launch",
             "preLaunchTask": "build",
@@ -98,6 +89,27 @@
             ],
         },
         {
+            "name": "register (check witness fail)",
+            "type": "neo-contract",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/src/bin/sc/registrar.nef",
+            "neo-express": "${workspaceFolder}/default.neo-express",
+            "invocation": {
+                "operation": "register",
+                "args": [
+                    "sample.domain",
+                    "@bob"
+                ]
+            },
+            "signers": [
+                "@alice"
+            ],
+            "return-types": [
+                "bool"
+            ]
+        },
+        {
             "name": "delete",
             "type": "neo-contract",
             "request": "launch",
@@ -117,6 +129,15 @@
             "return-types": [
                 "bool"
             ],
+        },
+        {
+            "name": "register (trace)",
+            "type": "neo-contract",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/bin/sc/registrar.nef",
+            "invocation": {
+                "trace-file": "${workspaceFolder}/trace-files/0x4cf8cea4be709b984b898efc8933e2ed402294cc82d087d43fb3d07e1be62fc1.neo-trace"
+            }
         }
     ]
 }

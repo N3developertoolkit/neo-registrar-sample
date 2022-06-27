@@ -20,7 +20,7 @@
             "args": [
                 "neotrace",
                 "tx",
-                "0x45239b3764a0973c89c1fca6bf1ef438a462f7fb705cdf7cf1739abe48328dad",
+                "0x4cf8cea4be709b984b898efc8933e2ed402294cc82d087d43fb3d07e1be62fc1",
                 "-r",
                 "testnet"
             ],
