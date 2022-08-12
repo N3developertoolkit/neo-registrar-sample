@@ -14,12 +14,12 @@ namespace DevHawk.Registrar.Cli
         {
             var json = await rpcClient.RpcSendAsync("expresslistcontracts").ConfigureAwait(false);
 
-            if (json != null && json is Neo.IO.Json.JArray array)
+            if (json != null && json is Neo.Json.JArray array)
             {
                 return array
                     .Select(j => (
-                        UInt160.Parse(j["hash"].AsString()),
-                        ContractManifest.FromJson(j["manifest"])))
+                        UInt160.Parse(j!["hash"]!.AsString()),
+                        ContractManifest.FromJson((Neo.Json.JObject)j!["manifest"]!)))
                     .ToList();
             }
 
