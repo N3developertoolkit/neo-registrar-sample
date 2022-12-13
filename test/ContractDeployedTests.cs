@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -11,7 +12,7 @@ using NeoTestHarness;
 using Xunit;
 using Xunit.Abstractions;
 using static DevHawk.RegistrarTests.Common;
-
+using TestApplicationEngine = NeoTestHarness.TestApplicationEngine;
 namespace DevHawk.RegistrarTests
 {
     [CheckpointPath("checkpoints/contract-deployed.neoxp-checkpoint")]
@@ -21,11 +22,21 @@ namespace DevHawk.RegistrarTests
         readonly ExpressChain chain;
         readonly ITestOutputHelper output;
 
+        const string envName = "NEO_TEST_APP_ENGINE_COVERAGE_PATH";
+
         public ContractDeployedTests(CheckpointFixture<ContractDeployedTests> fixture, ITestOutputHelper output)
         {
             this.fixture = fixture;
             this.chain = fixture.FindChain();
             this.output = output;
+        }
+
+        [Fact]
+        public void get_coverage_path()
+        {
+            var coveragePath = Environment.GetEnvironmentVariable(envName)
+                ?? "<not found>";
+            output.WriteLine($"CoveragePath: {coveragePath}");
         }
 
         [Fact]

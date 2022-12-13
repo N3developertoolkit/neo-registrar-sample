@@ -49,6 +49,26 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "test",
+            "dependsOn": "restore-tools",
+            "command": "dotnet",
+            "type": "shell",
+            "args": [
+                "test",
+                "--collect:\"Neo\u0020code\u0020coverage\""
+            ],
+            "group": {
+                "kind": "build",
+            },
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
             "label": "test runner",
             "dependsOn": "build",
             "type": "shell",

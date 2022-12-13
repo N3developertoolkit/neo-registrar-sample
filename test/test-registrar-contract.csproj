@@ -4,6 +4,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>DevHawk.RegistrarTests</RootNamespace>
     <TargetFramework>net6.0</TargetFramework>
+    <DefineConstants>$(DefineConstants);TEST_HARNESS_ATTRIBUTES</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,9 +17,13 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.0" />
-    <PackageReference Include="Neo.Assertions" Version="3.4.13" />
-    <PackageReference Include="Neo.BuildTasks" Version="3.4.13" PrivateAssets="all" />
-    <PackageReference Include="Neo.Test.Harness" Version="3.4.13" />
+    <PackageReference Include="Neo.Assertions" Version="$(NeoTestVersion)" />
+    <PackageReference Include="Neo.BuildTasks" Version="$(NeoTestVersion)" PrivateAssets="all" />
+    <PackageReference Include="Neo.Collector" Version="$(NeoTestVersion)" >
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Neo.Test.Harness" Version="$(NeoTestVersion)" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
