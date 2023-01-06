@@ -1,5 +1,6 @@
 using Neo;
 using Neo.SmartContract.Framework;
+using Neo.SmartContract.Framework.Attributes;
 using Neo.SmartContract.Framework.Services;
 
 namespace DevHawk.Contracts
@@ -13,6 +14,7 @@ namespace DevHawk.Contracts
             storageMap = new StorageMap(Storage.CurrentContext, prefix);
         }
 
+        [Safe]
         public UInt160 Get(string domain) => (UInt160)storageMap.Get(domain) ?? UInt160.Zero;
         public void Put(string domain, UInt160 owner) => storageMap.Put(domain, (ByteString)owner);
         public void Delete(string domain) => storageMap.Delete(domain);
