@@ -88,7 +88,7 @@ namespace DevHawk.Contracts
         }
 
         [DisplayName("_deploy")]
-        public static void Deploy(object data, bool update)
+        public static void Deploy(object _ /*data*/, bool update)
         {
             if (update) return;
 
