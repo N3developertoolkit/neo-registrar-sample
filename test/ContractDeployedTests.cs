@@ -12,7 +12,7 @@ using NeoTestHarness;
 using Xunit;
 using Xunit.Abstractions;
 using static DevHawk.RegistrarTests.Common;
-using TestApplicationEngine = NeoTestHarness.TestApplicationEngine;
+
 namespace DevHawk.RegistrarTests
 {
     [CheckpointPath("checkpoints/contract-deployed.neoxp-checkpoint")]

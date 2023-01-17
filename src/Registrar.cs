@@ -17,19 +17,15 @@ namespace DevHawk.Contracts
         const byte Prefix_DomainOwners = 0x00;
         const byte Prefix_ContractOwner = 0xFF;
 
-        public UInt160 Query(string domain)
+        [Safe]
+        public static UInt160 Query(string domain)
         {
             DomainStorage domainOwners = new(Prefix_DomainOwners);
             var currentOwner = domainOwners.Get(domain);
-            if (currentOwner.IsZero)
-            {
-                Runtime.Log("Domain not registered");
-            }
-
             return currentOwner;
         }
 
-        public bool Register(string domain, UInt160 owner)
+        public static bool Register(string domain, UInt160 owner)
         {
             DomainStorage domainOwners = new(Prefix_DomainOwners);
             var currentOwner = domainOwners.Get(domain);
@@ -48,7 +44,7 @@ namespace DevHawk.Contracts
             return true;
         }
 
-        public bool Transfer(string domain, UInt160 to)
+        public static bool Transfer(string domain, UInt160 to)
         {
             DomainStorage domainOwners = new(Prefix_DomainOwners);
             var currentOwner = domainOwners.Get(domain);
@@ -72,7 +68,7 @@ namespace DevHawk.Contracts
             return true;
         }
 
-        public bool Delete(string domain)
+        public static bool Delete(string domain)
         {
             DomainStorage domainOwners = new(Prefix_DomainOwners);
             var currentOwner = domainOwners.Get(domain);
@@ -92,7 +88,7 @@ namespace DevHawk.Contracts
         }
 
         [DisplayName("_deploy")]
-        public void Deploy(object data, bool update)
+        public static void Deploy(object _ /*data*/, bool update)
         {
             if (update) return;
 
