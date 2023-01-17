@@ -22,11 +22,6 @@ namespace DevHawk.Contracts
         {
             DomainStorage domainOwners = new(Prefix_DomainOwners);
             var currentOwner = domainOwners.Get(domain);
-            if (currentOwner.IsZero)
-            {
-                Runtime.Log("Domain not registered");
-            }
-
             return currentOwner;
         }
 
