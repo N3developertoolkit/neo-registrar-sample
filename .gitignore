@@ -412,3 +412,4 @@ $RECYCLE.BIN/
 *.neo-trace
 !trace-files/*.neo-trace
 /checkpoints/*.neoxp-checkpoint
+run.ps1
