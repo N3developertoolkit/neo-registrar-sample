@@ -4,7 +4,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>DevHawk.RegistrarTests</RootNamespace>
     <TargetFramework>net6.0</TargetFramework>
-    <DefineConstants>$(DefineConstants);OMIT_TEST_HARNESS_ATTRIBUTES</DefineConstants>
+    <VSTestCollect>Neo code coverage</VSTestCollect>
   </PropertyGroup>
 
   <ItemGroup>

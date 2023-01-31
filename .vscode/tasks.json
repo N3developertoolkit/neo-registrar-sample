@@ -54,8 +54,7 @@
             "command": "dotnet",
             "type": "shell",
             "args": [
-                "test",
-                "--collect:\"Neo\u0020code\u0020coverage\""
+                "test"
             ],
             "group": {
                 "kind": "build",
@@ -63,10 +62,7 @@
             "presentation": {
                 "reveal": "silent"
             },
-            "problemMatcher": "$msCompile",
-            "options": {
-                "cwd": "${workspaceFolder}"
-            }
+            "problemMatcher": "$msCompile"
         },
         {
             "label": "test runner",

@@ -1,1 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><Project><PropertyGroup><NeoTestVersion>3.6.18-preview-g15603cad10 </NeoTestVersion></PropertyGroup></Project>
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <NeoTestVersion>3.5.19</NeoTestVersion>
+  </PropertyGroup>
+</Project>
