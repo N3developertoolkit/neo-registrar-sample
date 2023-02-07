@@ -101,13 +101,10 @@ namespace DevHawk.Contracts
         {
             var key = new byte[] { Prefix_ContractOwner };
             var contractOwner = (UInt160)Storage.Get(Storage.CurrentContext, key);
-            var tx = (Transaction)Runtime.ScriptContainer;
-
-            if (!contractOwner.Equals(tx.Sender))
+            if (!Runtime.CheckWitness(contractOwner))
             {
                 throw new Exception("Only the contract owner can update the contract");
             }
-
             ContractManagement.Update(nefFile, manifest, null);
         }
     }
