@@ -14,24 +14,9 @@
             "problemMatcher": []
         },
         {
-            "label": "generate trace",
-            "command": "dotnet",
-            "type": "shell",
-            "args": [
-                "neotrace",
-                "tx",
-                "0x4cf8cea4be709b984b898efc8933e2ed402294cc82d087d43fb3d07e1be62fc1",
-                "-r",
-                "testnet"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}/trace-files"
-            },
-            "problemMatcher": []
-        },
-        {
             "label": "build",
-            "dependsOn": "restore-tools",
+            // Note, the registrar.csproj file automatically runs `dotnet tool restore`
+            // so this VSCode task doesn't need to depend on `restore-tools`
             "command": "dotnet",
             "type": "shell",
             "args": [
@@ -49,8 +34,28 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "generate trace",
+            "dependsOn": "restore-tools",
+            "command": "dotnet",
+            "type": "shell",
+            "args": [
+                "neotrace",
+                "tx",
+                "0x4cf8cea4be709b984b898efc8933e2ed402294cc82d087d43fb3d07e1be62fc1",
+                "-r",
+                "testnet"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/trace-files"
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "test runner",
-            "dependsOn": "build",
+            "dependsOn": [
+                "restore-tools",
+                "build"
+            ],
             "type": "shell",
             "command": "dotnet",
             "args": [
