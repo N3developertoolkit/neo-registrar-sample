@@ -8,10 +8,11 @@ using Neo.SmartContract.Framework.Services;
 
 namespace DevHawk.Contracts
 {
-    [DisplayName("DevHawk Registrar")]
+    [DisplayName("SampleRegistrar")]
     [ManifestExtra("Author", "Harry Pierson")]
     [ManifestExtra("Email", "harrypierson@hotmail.com")]
     [ManifestExtra("Description", "This is an example contract")]
+    [ManifestExtra("GitHubRepo", "https://github.com/ngdenterprise/neo-registrar-sample")]
     public class Registrar : SmartContract
     {
         const byte Prefix_DomainOwners = 0x00;
