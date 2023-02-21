@@ -8,10 +8,11 @@ using Neo.SmartContract.Framework.Services;
 
 namespace DevHawk.Contracts
 {
-    [DisplayName("DevHawk Registrar")]
+    [DisplayName("SampleRegistrar")]
     [ManifestExtra("Author", "Harry Pierson")]
     [ManifestExtra("Email", "harrypierson@hotmail.com")]
     [ManifestExtra("Description", "This is an example contract")]
+    [ManifestExtra("GitHubRepo", "https://github.com/ngdenterprise/neo-registrar-sample")]
     public class Registrar : SmartContract
     {
         const byte Prefix_DomainOwners = 0x00;
@@ -91,7 +92,6 @@ namespace DevHawk.Contracts
         public static void Deploy(object _ /*data*/, bool update)
         {
             if (update) return;
-
             var tx = (Transaction)Runtime.ScriptContainer;
             var key = new byte[] { Prefix_ContractOwner };
             Storage.Put(Storage.CurrentContext, key, tx.Sender);
@@ -101,14 +101,14 @@ namespace DevHawk.Contracts
         {
             var key = new byte[] { Prefix_ContractOwner };
             var contractOwner = (UInt160)Storage.Get(Storage.CurrentContext, key);
-            var tx = (Transaction)Runtime.ScriptContainer;
-
-            if (!contractOwner.Equals(tx.Sender))
+            if (Runtime.CheckWitness(contractOwner))
+            {
+                ContractManagement.Update(nefFile, manifest, null);
+            }
+            else
             {
                 throw new Exception("Only the contract owner can update the contract");
             }
-
-            ContractManagement.Update(nefFile, manifest, null);
         }
     }
 }

@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <NeoContractReference Include="..\src\registrar.csproj" ContractNameOverride="Registrar" />
+    <NeoContractReference Include="..\src\registrar.csproj" />
   </ItemGroup>
 
   <ItemGroup>

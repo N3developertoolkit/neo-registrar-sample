@@ -12,4 +12,8 @@
     <PackageReference Include="Neo.BuildTasks" Version="$(NeoTestVersion)" PrivateAssets="all" />
   </ItemGroup>
 
+  <Target Name="RestoreDotNetTools" BeforeTargets="Compile" >
+    <Exec Command="dotnet tool restore"/>
+  </Target>
+
 </Project>
