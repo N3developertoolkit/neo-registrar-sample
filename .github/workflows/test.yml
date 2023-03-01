@@ -1,0 +1,37 @@
+name: Xplat Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy: 
+      matrix:
+        os: [macos-11, macos-12, ubuntu-20.04, ubuntu-22.04, windows-2019, windows-2022]
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: |
+          6.x
+          7.x
+    - name: Install RocksDB Dependencies
+      if: ${{ runner.os == 'Linux'}}
+      run: |
+        sudo apt-get update
+        sudo apt-get install libsnappy-dev libc6-dev librocksdb-dev -y
+    - name: Build and Test
+      run: |
+        dotnet restore --verbosity normal
+        dotnet build --no-restore --verbosity normal
+        dotnet test --no-build --verbosity normal
+    - name: Upload Coverage
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-${{ matrix.os }}
+        path: ./test/TestResults/*/*
