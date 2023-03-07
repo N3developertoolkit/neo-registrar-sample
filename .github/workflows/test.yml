@@ -5,10 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy: 
-      matrix:
-        os: [macos-11, macos-12, ubuntu-20.04, ubuntu-22.04, windows-2019, windows-2022]
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
@@ -21,7 +18,6 @@ jobs:
           6.x
           7.x
     - name: Install RocksDB Dependencies
-      if: ${{ runner.os == 'Linux'}}
       run: |
         sudo apt-get update
         sudo apt-get install libsnappy-dev libc6-dev librocksdb-dev -y
@@ -30,8 +26,7 @@ jobs:
         dotnet restore --verbosity normal
         dotnet build --no-restore --verbosity normal
         dotnet test --no-build --verbosity normal
-    - name: Upload Coverage
-      uses: actions/upload-artifact@v3
+    - name: Code Coverage Report
+      uses: irongut/CodeCoverageSummary@v1.3.0
       with:
-        name: coverage-${{ matrix.os }}
-        path: ./test/TestResults/*/*
+        filename: ./test/**/neo-coverage.cobertura.xml
