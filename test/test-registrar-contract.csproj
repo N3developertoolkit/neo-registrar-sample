@@ -5,6 +5,7 @@
     <RootNamespace>DevHawk.RegistrarTests</RootNamespace>
     <TargetFramework>net6.0</TargetFramework>
     <VSTestCollect>Neo code coverage</VSTestCollect>
+    <RunSettingsFilePath>$(MSBuildThisFileDirectory)/test.runsettings</RunSettingsFilePath>
   </PropertyGroup>
 
   <ItemGroup>
