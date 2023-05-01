@@ -3,7 +3,7 @@
     <DataCollectors>
       <DataCollector friendlyName="Neo code coverage">
         <Configuration>
-          <VerboseLog>true</VerboseLog>
+          <VerboseLog>false</VerboseLog>
         </Configuration>
       </DataCollector>
     </DataCollectors>
